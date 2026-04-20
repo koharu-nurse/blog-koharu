@@ -1,0 +1,127 @@
+---
+// プライバシーポリシー
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+
+const pageTitle = `プライバシーポリシー | ${SITE_TITLE}`;
+const pageDesc = '当サイトのプライバシーポリシー（個人情報の取り扱い・アクセス解析・広告配信について）';
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={pageTitle} description={pageDesc} />
+	</head>
+	<body>
+		<Header />
+		<main class="container prose">
+			<h1>プライバシーポリシー</h1>
+
+			<h2>個人情報の利用目的</h2>
+			<p>
+				当サイトでは、お問い合わせフォームを通じてお名前、メールアドレス等の個人情報をご入力いただく場合があります。
+				取得した個人情報は、お問い合わせへの返信および必要な連絡のためにのみ利用し、それ以外の目的では利用いたしません。
+			</p>
+
+			<h2>個人情報の第三者提供について</h2>
+			<p>
+				当サイトでは、個人情報は適切に管理し、以下の場合を除いて第三者に開示することはありません。
+			</p>
+			<ul>
+				<li>本人のご了解がある場合</li>
+				<li>法令等への協力のため、開示が必要となる場合</li>
+			</ul>
+
+			<h2>Cookieの使用について</h2>
+			<p>
+				当サイトでは、サービス向上のためにCookieを使用しています。Cookieは、利用者のブラウザに保存される小さなテキストファイルで、個人を特定する情報は含まれません。
+				ブラウザの設定でCookieを無効化することも可能です。
+			</p>
+
+			<h2>アクセス解析ツールについて</h2>
+			<p>
+				当サイトでは、Googleが提供するアクセス解析ツール「Googleアナリティクス」を利用しています。
+				Googleアナリティクスはトラフィックデータの収集のためにCookieを使用しています。
+				このトラフィックデータは匿名で収集されており、個人を特定するものではありません。
+			</p>
+			<p>
+				この機能はCookieを無効にすることで収集を拒否することが出来ますので、お使いのブラウザの設定をご確認ください。<br />
+				詳しくは <a href="https://marketingplatform.google.com/about/analytics/terms/jp/" target="_blank" rel="noopener">Googleアナリティクス利用規約</a> をご確認ください。
+			</p>
+
+			<h2>広告について</h2>
+			<p>
+				当サイトでは、第三者配信の広告サービス（Googleアドセンス、A8.net、もしもアフィリエイト、バリューコマース等）を利用することがあります。
+				このような広告配信事業者は、ユーザーの興味に応じた商品やサービスの広告を表示するため、当サイトや他サイトへのアクセスに関する情報「Cookie」を使用することがあります。
+			</p>
+			<p>
+				Cookieを無効にする方法やGoogleアドセンスに関する詳細は <a href="https://policies.google.com/technologies/ads?hl=ja" target="_blank" rel="noopener">広告 - ポリシーと規約 - Google</a> をご確認ください。
+			</p>
+
+			<h2>当サイトへのコメントについて</h2>
+			<p>
+				当サイトでは、スパム・荒らしへの対応として、コメントを残された方のIPアドレスを記録しています。
+				また、明らかにサイトの趣旨にそぐわないコメント、誹謗中傷、違法性のあるコメントは管理人の判断で削除することがあります。
+			</p>
+
+			<h2>免責事項</h2>
+			<p>
+				当サイトに掲載されている情報は、可能な限り正確な情報を掲載するよう努めておりますが、誤情報が入り込んだり、情報が古くなっていることもございます。
+				当サイトに掲載された内容によって生じた損害等の一切の責任を負いかねますので、ご了承ください。
+			</p>
+			<p>
+				また、当サイトでは医療・健康・お金に関する記事も扱っておりますが、これらは個人の体験談および一般的な情報提供を目的としたものであり、専門的な助言に代わるものではありません。
+				ご自身の状況については、必ず医師・税理士・FPなどの専門家にご相談ください。
+			</p>
+
+			<h2>プライバシーポリシーの変更について</h2>
+			<p>
+				当サイトは、個人情報に関して適用される日本の法令を遵守するとともに、本ポリシーの内容を適宜見直しその改善に努めます。
+				修正された最新のプライバシーポリシーは常に本ページにて開示されます。
+			</p>
+
+			<p class="updated-at">最終更新日：2026年4月21日</p>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 760px;
+		padding: 50px 24px 60px;
+	}
+	h1 {
+		font-size: 26px;
+		text-align: center;
+		margin-bottom: 32px;
+	}
+	h2 {
+		font-size: 18px;
+		margin-top: 2em;
+		margin-bottom: 0.6em;
+		padding: 8px 14px;
+		background: var(--bg-accent);
+		border-left: 4px solid var(--pink-main);
+		border-radius: 0 8px 8px 0;
+	}
+	p {
+		margin-bottom: 1em;
+		line-height: 1.8;
+	}
+	ul {
+		margin: 0 0 1em 1.5em;
+	}
+	a {
+		color: var(--pink-deep);
+		text-decoration: underline;
+	}
+	.updated-at {
+		text-align: right;
+		color: var(--text-sub);
+		font-size: 13px;
+		margin-top: 40px;
+	}
+</style>

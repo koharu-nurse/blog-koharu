@@ -1,0 +1,92 @@
+---
+// 404 ページが見つかりませんでした
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+
+const pageTitle = `ページが見つかりません | ${SITE_TITLE}`;
+const pageDesc = 'お探しのページは見つかりませんでした。';
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={pageTitle} description={pageDesc} />
+	</head>
+	<body>
+		<Header />
+		<main class="container">
+			<div class="card">
+				<div class="emoji">🌷</div>
+				<h1>ページが見つかりません</h1>
+				<p class="msg">
+					URLが変わったか、削除された可能性があります。<br />
+					お手数ですが、トップページから探してみてください。
+				</p>
+				<div class="actions">
+					<a href="/" class="btn">トップへもどる</a>
+					<a href="/blog/" class="btn-outline">記事一覧をみる</a>
+				</div>
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 600px;
+		padding: 80px 24px;
+	}
+	.card {
+		background: var(--bg-card);
+		border-radius: 20px;
+		padding: 50px 32px;
+		text-align: center;
+		box-shadow: var(--shadow);
+	}
+	.emoji {
+		font-size: 64px;
+		margin-bottom: 16px;
+	}
+	h1 {
+		font-size: 22px;
+		margin-bottom: 16px;
+	}
+	.msg {
+		color: var(--text-sub);
+		margin-bottom: 32px;
+		line-height: 1.8;
+	}
+	.actions {
+		display: flex;
+		gap: 12px;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+	.btn,
+	.btn-outline {
+		display: inline-block;
+		padding: 12px 24px;
+		border-radius: 100px;
+		font-size: 14px;
+		font-weight: 700;
+		transition: all 0.2s;
+	}
+	.btn {
+		background: var(--pink-main);
+		color: white;
+	}
+	.btn:hover {
+		background: var(--pink-deep);
+	}
+	.btn-outline {
+		background: transparent;
+		color: var(--pink-deep);
+		border: 2px solid var(--pink-main);
+	}
+	.btn-outline:hover {
+		background: var(--bg-accent);
+	}
+</style>

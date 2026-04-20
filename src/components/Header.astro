@@ -1,0 +1,71 @@
+---
+// サイトヘッダー（ロゴ＋ナビゲーション）
+import { SITE_TITLE_SHORT, SITE_TAGLINE, NAV_ITEMS } from '../consts';
+---
+
+<header class="header">
+	<div class="header-inner container">
+		<a href="/" class="site-title">
+			🌷 {SITE_TITLE_SHORT}
+			<span>{SITE_TAGLINE}</span>
+		</a>
+		<nav class="nav" aria-label="メインナビゲーション">
+			{NAV_ITEMS.map((item) => (
+				<a href={item.href}>{item.label}</a>
+			))}
+		</nav>
+	</div>
+</header>
+
+<style>
+	.header {
+		background: var(--bg-card);
+		border-bottom: 1px solid var(--border);
+		padding: 18px 0;
+		position: sticky;
+		top: 0;
+		z-index: 100;
+	}
+	.header-inner {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.site-title {
+		font-size: 20px;
+		color: var(--pink-deep);
+		font-weight: 700;
+		font-family: var(--font-heading);
+	}
+	.site-title span {
+		font-size: 13px;
+		color: var(--text-sub);
+		font-weight: 500;
+		margin-left: 6px;
+		font-family: var(--font-body);
+	}
+	.nav {
+		display: flex;
+		gap: 24px;
+	}
+	.nav a {
+		font-size: 14px;
+		color: var(--text-sub);
+		transition: color 0.2s;
+	}
+	.nav a:hover {
+		color: var(--pink-deep);
+	}
+
+	@media (max-width: 768px) {
+		.nav {
+			display: none;
+		}
+		.site-title {
+			font-size: 17px;
+		}
+		.site-title span {
+			display: none;
+		}
+	}
+</style>

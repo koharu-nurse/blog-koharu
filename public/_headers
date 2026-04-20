@@ -1,0 +1,19 @@
+# Cloudflare Pages共通ヘッダー
+# セキュリティと長期キャッシュの設定
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# 静的アセット（フォント・画像・JS・CSS）は1年キャッシュ
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ads.txtは更新検知のため短めキャッシュ
+/ads.txt
+  Cache-Control: public, max-age=3600

@@ -1,0 +1,397 @@
+---
+// トップページ：ヒーロー＋新着記事＋プロフィール
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, PROFILE, CATEGORIES } from '../consts';
+
+// 公開記事を新しい順に取得（draft=trueは除外）
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const latestPosts = allPosts.slice(0, 6);
+const popularPosts = allPosts.slice(0, 4); // 仮：将来的にPV順に差し替え
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+
+		<!-- ヒーロー -->
+		<section class="hero">
+			<div class="hero-content">
+				<span class="hero-badge">看護師ママが発信中</span>
+				<h1>ゆっくり、じぶんのペースで<br />お金と暮らしを整える</h1>
+				<p>
+					3児のママで現役看護師のこはるが、<br />
+					資産2000万円を達成するまでの家計管理・つみたてNISA・固定費見直しの実体験を、<br />
+					やさしい言葉でお届けします。
+				</p>
+			</div>
+		</section>
+
+		<!-- メイン2カラム -->
+		<div class="layout container">
+			<main>
+				<h2 class="section-title">新着記事</h2>
+				{latestPosts.length === 0 ? (
+					<p class="empty">まだ記事がありません。</p>
+				) : (
+					<div class="articles-grid">
+						{latestPosts.map((post) => {
+							const cat = CATEGORIES[post.data.category] ?? CATEGORIES.life;
+							return (
+								<a href={`/blog/${post.id}/`} class="article-card">
+									<div class="article-thumb">
+										{post.data.heroImage ? (
+											<Image src={post.data.heroImage} alt="" width={400} height={250} />
+										) : (
+											<span class="article-thumb-emoji">{cat.emoji}</span>
+										)}
+									</div>
+									<div class="article-body">
+										<span class="article-category">{cat.label}</span>
+										<h3 class="article-title">{post.data.title}</h3>
+										<p class="article-date">
+											<FormattedDate date={post.data.pubDate} />
+										</p>
+									</div>
+								</a>
+							);
+						})}
+					</div>
+				)}
+			</main>
+
+			<aside class="sidebar">
+				<!-- プロフィール -->
+				<div class="profile-card">
+					<div class="profile-avatar">👩‍⚕️</div>
+					<h3 class="profile-name">{PROFILE.name}</h3>
+					<p class="profile-role">{PROFILE.role}</p>
+					<p class="profile-bio">{PROFILE.bio}</p>
+					<div class="profile-stats">
+						{PROFILE.stats.map((stat) => (
+							<div class="stat-item">
+								<div class="stat-value">{stat.value}</div>
+								<div class="stat-label">{stat.label}</div>
+							</div>
+						))}
+					</div>
+					<a href="/about/" class="profile-btn">プロフィールを読む</a>
+				</div>
+
+				<!-- 人気記事 -->
+				{popularPosts.length > 0 && (
+					<div class="side-section">
+						<h3 class="side-title">よく読まれています</h3>
+						<ul class="popular-list">
+							{popularPosts.map((post) => (
+								<li>
+									<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+			</aside>
+		</div>
+
+		<Footer />
+	</body>
+</html>
+
+<style>
+	/* ヒーロー */
+	.hero {
+		background: linear-gradient(135deg, #faf0ec 0%, #f3e5e1 100%);
+		padding: 70px 24px 80px;
+		text-align: center;
+		position: relative;
+		overflow: hidden;
+	}
+	.hero::before {
+		content: '';
+		position: absolute;
+		width: 300px;
+		height: 300px;
+		background: radial-gradient(circle, rgba(212, 165, 165, 0.2), transparent 70%);
+		top: -100px;
+		left: -100px;
+		border-radius: 50%;
+	}
+	.hero::after {
+		content: '';
+		position: absolute;
+		width: 400px;
+		height: 400px;
+		background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent 70%);
+		bottom: -150px;
+		right: -150px;
+		border-radius: 50%;
+	}
+	.hero-content {
+		position: relative;
+		z-index: 1;
+		max-width: 700px;
+		margin: 0 auto;
+	}
+	.hero h1 {
+		font-size: 32px;
+		color: var(--text-main);
+		margin-bottom: 16px;
+		letter-spacing: 0.02em;
+	}
+	.hero p {
+		color: var(--text-sub);
+		font-size: 15px;
+		line-height: 2;
+	}
+	.hero-badge {
+		display: inline-block;
+		background: white;
+		color: var(--pink-deep);
+		padding: 6px 16px;
+		border-radius: 100px;
+		font-size: 12px;
+		font-weight: 700;
+		margin-bottom: 20px;
+		box-shadow: var(--shadow);
+	}
+
+	/* レイアウト */
+	.layout {
+		padding: 60px 24px;
+		display: grid;
+		grid-template-columns: 1fr 300px;
+		gap: 50px;
+	}
+
+	/* セクションタイトル */
+	.section-title {
+		font-size: 22px;
+		color: var(--text-main);
+		margin-bottom: 28px;
+		padding-bottom: 12px;
+		border-bottom: 2px solid var(--pink-main);
+		display: inline-block;
+	}
+	.section-title::before {
+		content: '🌷 ';
+	}
+
+	/* 記事カードグリッド */
+	.articles-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 24px;
+	}
+	.article-card {
+		background: var(--bg-card);
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: var(--shadow);
+		transition: transform 0.3s, box-shadow 0.3s;
+		display: block;
+		color: inherit;
+	}
+	.article-card:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-hover);
+	}
+	.article-thumb {
+		aspect-ratio: 16 / 10;
+		background: linear-gradient(135deg, #f3e5e1, #e8d3cd);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+	.article-thumb :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+	}
+	.article-thumb-emoji {
+		font-size: 48px;
+		color: var(--pink-main);
+	}
+	.article-body {
+		padding: 20px;
+	}
+	.article-category {
+		display: inline-block;
+		background: var(--bg-accent);
+		color: var(--pink-deep);
+		font-size: 11px;
+		padding: 4px 10px;
+		border-radius: 100px;
+		font-weight: 700;
+		margin-bottom: 10px;
+	}
+	.article-title {
+		font-size: 16px;
+		font-weight: 700;
+		color: var(--text-main);
+		line-height: 1.5;
+		margin-bottom: 10px;
+	}
+	.article-date {
+		font-size: 12px;
+		color: var(--text-sub);
+		margin: 0;
+	}
+	.empty {
+		color: var(--text-sub);
+		padding: 40px 0;
+	}
+
+	/* サイドバー */
+	.sidebar {
+		display: flex;
+		flex-direction: column;
+		gap: 30px;
+	}
+	.profile-card {
+		background: var(--bg-card);
+		border-radius: 20px;
+		padding: 30px 24px;
+		text-align: center;
+		box-shadow: var(--shadow);
+		border: 1px solid var(--border);
+	}
+	.profile-avatar {
+		width: 110px;
+		height: 110px;
+		border-radius: 50%;
+		background: linear-gradient(135deg, #f3e5e1, #d4a5a5);
+		margin: 0 auto 16px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 48px;
+		border: 4px solid white;
+		box-shadow: var(--shadow);
+	}
+	.profile-name {
+		font-size: 18px;
+		font-weight: 700;
+		color: var(--text-main);
+		margin-bottom: 4px;
+	}
+	.profile-role {
+		font-size: 12px;
+		color: var(--pink-deep);
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		margin-bottom: 16px;
+	}
+	.profile-bio {
+		font-size: 13px;
+		color: var(--text-sub);
+		line-height: 1.8;
+		text-align: left;
+		margin-bottom: 20px;
+	}
+	.profile-stats {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 8px;
+		padding: 16px 0;
+		border-top: 1px dashed var(--border);
+		border-bottom: 1px dashed var(--border);
+		margin-bottom: 20px;
+	}
+	.stat-item {
+		text-align: center;
+	}
+	.stat-value {
+		font-size: 16px;
+		font-weight: 700;
+		color: var(--pink-deep);
+		font-family: var(--font-heading);
+	}
+	.stat-label {
+		font-size: 10px;
+		color: var(--text-sub);
+		margin-top: 2px;
+	}
+	.profile-btn {
+		display: block;
+		background: var(--pink-main);
+		color: white;
+		padding: 12px;
+		border-radius: 100px;
+		font-size: 13px;
+		font-weight: 700;
+		transition: background 0.2s;
+	}
+	.profile-btn:hover {
+		background: var(--pink-deep);
+	}
+
+	.side-section {
+		background: var(--bg-card);
+		border-radius: 20px;
+		padding: 24px;
+		box-shadow: var(--shadow);
+		border: 1px solid var(--border);
+	}
+	.side-title {
+		font-size: 15px;
+		color: var(--text-main);
+		margin-bottom: 16px;
+		padding-bottom: 8px;
+		border-bottom: 2px solid var(--pink-main);
+		font-weight: 700;
+	}
+	.popular-list {
+		list-style: none;
+	}
+	.popular-list li {
+		padding: 10px 0;
+		border-bottom: 1px dashed var(--border);
+		font-size: 13px;
+		line-height: 1.5;
+	}
+	.popular-list li:last-child {
+		border-bottom: none;
+	}
+	.popular-list li::before {
+		content: '♡ ';
+		color: var(--pink-main);
+	}
+	.popular-list a {
+		color: var(--text-main);
+		transition: color 0.2s;
+	}
+	.popular-list a:hover {
+		color: var(--pink-deep);
+	}
+
+	/* スマホ対応 */
+	@media (max-width: 768px) {
+		.layout {
+			grid-template-columns: 1fr;
+			gap: 40px;
+			padding: 40px 16px;
+		}
+		.articles-grid {
+			grid-template-columns: 1fr;
+		}
+		.hero h1 {
+			font-size: 24px;
+		}
+		.hero {
+			padding: 50px 16px 60px;
+		}
+	}
+</style>

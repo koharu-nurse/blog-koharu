@@ -1,0 +1,17 @@
+# Cloudflare Pages リダイレクト設定
+# フォーマット：[元URL] [新URL] [ステータスコード(任意・既定301)]
+#
+# 旧ドメイン koharu-nursu.com → koharu-nurse.com 移行は
+# Cloudflareダッシュボード側のRedirect Rulesで設定する
+# （このファイルでは同一サイト内の旧URL→新URLパスのみ管理）
+#
+# WordPress時代の旧URL（/?p=ID 形式や旧スラッグ）を
+# 新スラッグへ301リダイレクトしたい場合はここに追記:
+# /old-slug/ /blog/new-slug/ 301
+#
+# 例：
+# /sample-page/ /blog/welcome/ 301
+
+# WordPress既定のフィードURLは新フィードへ
+/feed/ /rss.xml 301
+/feed /rss.xml 301

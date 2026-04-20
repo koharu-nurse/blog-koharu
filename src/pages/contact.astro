@@ -1,0 +1,191 @@
+---
+// お問い合わせページ
+// Cloudflare PagesはPHPが動かないため、Contact Form 7の代わりに
+// Formspree（無料サービス）を使う想定。
+// 暫定でmailto:リンクも併記しておく。
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+
+// Formspreeのフォームエンドポイント（要差し替え）
+// 1. https://formspree.io/ で無料アカウント作成
+// 2. New Form → Email先を koharu.nurse.info@gmail.com に
+// 3. 発行された https://formspree.io/f/xxxxxxxx を下に貼る
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID';
+const CONTACT_EMAIL = 'koharu.nurse.info@gmail.com';
+const isFormspreeConfigured = !FORMSPREE_ENDPOINT.includes('REPLACE_WITH_YOUR_FORM_ID');
+
+const pageTitle = `お問い合わせ | ${SITE_TITLE}`;
+const pageDesc = 'こはるへのお問い合わせはこちらのフォームまたはメールでお願いします。';
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={pageTitle} description={pageDesc} />
+	</head>
+	<body>
+		<Header />
+		<main class="container">
+			<h1>お問い合わせ</h1>
+			<p class="lead">
+				ブログを読んでくださってありがとうございます🌸<br />
+				ご質問・ご感想・お仕事のご依頼など、お気軽にどうぞ。
+			</p>
+
+			{isFormspreeConfigured ? (
+				<form class="contact-form" action={FORMSPREE_ENDPOINT} method="POST">
+					<label>
+						お名前 <span class="req">必須</span>
+						<input type="text" name="name" required />
+					</label>
+					<label>
+						メールアドレス <span class="req">必須</span>
+						<input type="email" name="email" required />
+					</label>
+					<label>
+						件名
+						<input type="text" name="subject" />
+					</label>
+					<label>
+						メッセージ <span class="req">必須</span>
+						<textarea name="message" rows="8" required></textarea>
+					</label>
+					<button type="submit" class="submit-btn">送信する</button>
+				</form>
+			) : (
+				<div class="setup-notice">
+					<p><strong>📮 メールでのお問い合わせ</strong></p>
+					<p>
+						下記アドレスまでメールをお送りください：<br />
+						<a href={`mailto:${CONTACT_EMAIL}`} class="email-link">{CONTACT_EMAIL}</a>
+					</p>
+					<p class="note">※ お問い合わせフォームは現在準備中です。</p>
+				</div>
+			)}
+
+			<section class="info">
+				<h2>返信について</h2>
+				<p>
+					3児ママで看護師として働いているため、お返事まで2〜3日いただくことがあります。<br />
+					ご了承くださいませ🙏
+				</p>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 700px;
+		padding: 50px 24px 60px;
+	}
+	h1 {
+		font-size: 26px;
+		text-align: center;
+		margin-bottom: 24px;
+	}
+	.lead {
+		color: var(--text-sub);
+		text-align: center;
+		margin-bottom: 40px;
+	}
+	.contact-form {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		background: var(--bg-card);
+		padding: 32px 28px;
+		border-radius: 16px;
+		box-shadow: var(--shadow);
+	}
+	.contact-form label {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		font-weight: 700;
+		font-size: 14px;
+		color: var(--text-main);
+	}
+	.req {
+		display: inline-block;
+		background: var(--pink-main);
+		color: white;
+		font-size: 10px;
+		padding: 2px 6px;
+		border-radius: 4px;
+		margin-left: 6px;
+		font-weight: 700;
+	}
+	.contact-form input,
+	.contact-form textarea {
+		width: 100%;
+		padding: 12px 14px;
+		border: 1px solid var(--border);
+		border-radius: 8px;
+		font-size: 15px;
+		font-family: var(--font-body);
+		background: #fff;
+		color: var(--text-main);
+		font-weight: 400;
+	}
+	.contact-form input:focus,
+	.contact-form textarea:focus {
+		outline: 2px solid var(--pink-main);
+		outline-offset: -1px;
+	}
+	.submit-btn {
+		background: var(--pink-main);
+		color: white;
+		border: none;
+		padding: 14px;
+		border-radius: 100px;
+		font-size: 15px;
+		font-weight: 700;
+		cursor: pointer;
+		transition: background 0.2s;
+		margin-top: 12px;
+	}
+	.submit-btn:hover {
+		background: var(--pink-deep);
+	}
+
+	.setup-notice {
+		background: var(--bg-card);
+		padding: 32px 28px;
+		border-radius: 16px;
+		box-shadow: var(--shadow);
+		text-align: center;
+	}
+	.email-link {
+		font-size: 18px;
+		color: var(--pink-deep);
+		text-decoration: underline;
+		font-weight: 700;
+		display: inline-block;
+		padding: 8px 0;
+	}
+	.note {
+		font-size: 12px;
+		color: var(--text-sub);
+		margin-top: 16px;
+	}
+
+	.info {
+		margin-top: 40px;
+		padding: 20px 24px;
+		background: var(--bg-accent);
+		border-radius: 12px;
+	}
+	.info h2 {
+		font-size: 16px;
+		margin-bottom: 8px;
+		color: var(--pink-deep);
+	}
+	.info p {
+		font-size: 14px;
+		margin: 0;
+	}
+</style>

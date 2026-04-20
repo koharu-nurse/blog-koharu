@@ -1,0 +1,7 @@
+# Cloudflare Pages のプロジェクト設定
+# Cloudflareダッシュボードで連携する際にこの設定を参照する
+# wrangler CLI からデプロイする場合にも使う
+
+name = "blog-koharu"
+compatibility_date = "2026-04-21"
+pages_build_output_dir = "./dist"

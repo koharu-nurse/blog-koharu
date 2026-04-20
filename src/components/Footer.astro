@@ -1,0 +1,38 @@
+---
+import { SITE_TITLE } from '../consts';
+const today = new Date();
+---
+
+<footer class="footer">
+	<div class="footer-links">
+		<a href="/about/">プロフィール</a>
+		<a href="/contact/">お問い合わせ</a>
+		<a href="/privacy/">プライバシーポリシー</a>
+	</div>
+	<p>© {today.getFullYear()} {SITE_TITLE}</p>
+</footer>
+
+<style>
+	.footer {
+		background: var(--bg-accent);
+		text-align: center;
+		padding: 40px 24px;
+		margin-top: 40px;
+		color: var(--text-sub);
+		font-size: 12px;
+	}
+	.footer-links {
+		display: flex;
+		justify-content: center;
+		gap: 24px;
+		margin-bottom: 16px;
+		flex-wrap: wrap;
+	}
+	.footer-links a {
+		font-size: 13px;
+		transition: color 0.2s;
+	}
+	.footer-links a:hover {
+		color: var(--pink-deep);
+	}
+</style>
