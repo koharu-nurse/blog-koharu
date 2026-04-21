@@ -1,4 +1,15 @@
 // サイト全体で使う定数
+
+// 本番ドメイン（このドメインのときだけ計測タグを発火させる）
+export const PRODUCTION_HOSTNAME = 'koharu-nurse.com';
+
+// Google Analytics 4 / Google Tag Manager の計測ID（旧WordPressから引き継ぎ）
+export const GA4_MEASUREMENT_ID = 'G-JW5QDJ093G';
+export const GTM_CONTAINER_ID = 'GT-NB9VCPZH';
+
+// Google AdSense Publisher ID（ads.txt と同じ値）
+export const ADSENSE_PUBLISHER_ID = 'pub-7347574472696539';
+
 export const SITE_TITLE = '看護師ママこはるの家計管理ブログ';
 export const SITE_TITLE_SHORT = 'こはるの家計管理ブログ';
 export const SITE_TAGLINE = '看護師ママ・3児の母';

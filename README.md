@@ -1,63 +1,64 @@
-# Astro Starter Kit: Blog
+# 看護師ママこはるの家計管理ブログ
 
-```sh
-npm create astro@latest -- --template blog
+看護師ママ・3児の母である「こはる」の家計管理ブログを [Astro](https://astro.build/) で構築し、[Cloudflare Pages](https://pages.cloudflare.com/) にデプロイするためのプロジェクトです。
+
+- 本番URL（予定）：<https://koharu-nurse.com>
+- 仮公開URL：<https://blog-koharu-4xx.pages.dev>
+
+## 🚀 開発コマンド
+
+プロジェクトルート（`blog-koharu/`）で実行します。
+
+| コマンド | 内容 |
+| :--- | :--- |
+| `npm install` | 依存パッケージをインストール |
+| `npm run dev` | ローカル開発サーバー起動（<http://localhost:4321>） |
+| `npm run build` | `dist/` に本番ビルドを出力 |
+| `npm run preview` | ビルド結果をローカルで確認 |
+| `npm run wp-import <xmlパス>` | WordPress書き出しXMLをMarkdownに変換 |
+
+## 📁 ディレクトリ構成
+
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
+blog-koharu/
+├── public/          # ads.txt / robots.txt / _redirects / _headers / og-default.svg など
+├── scripts/         # WordPress → Markdown 変換スクリプト
 ├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
+│   ├── components/  # Header・Footer・BaseHead など共通パーツ
+│   ├── content/     # 記事本体（Markdown / MDX）
+│   ├── layouts/     # 記事レイアウト
+│   ├── pages/       # トップ・ブログ一覧・プロフィール・問い合わせ など
+│   ├── styles/      # グローバルCSS
+│   └── consts.ts    # サイト名・プロフィール・カテゴリ・計測ID
 ├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+└── wrangler.toml
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🎨 デザイン方針
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- カラーパレット：ベージュ（`#faf0ec`）× くすみピンク（`#d4a5a5`）
+- フォント：本文 `Noto Sans JP` / 見出し `Zen Maru Gothic`
+- やわらかい雰囲気で、看護師ママ層を意識した読みやすさ重視
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+## 📊 計測タグの扱い
 
-Any static assets, like images, can be placed in the `public/` directory.
+`src/components/BaseHead.astro` で、**本番ドメイン（`koharu-nurse.com`）でのみ** Google Analytics 4 / Google Tag Manager を発火させています。
+仮URL（`*.pages.dev`）ではタグが動かないので、プレビュー確認時のアクセスが計測に混ざりません。
 
-## 🧞 Commands
+## 🚢 デプロイ
 
-All commands are run from the root of the project, from a terminal:
+現在は手動でZIPアップロードする運用です。
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```bash
+npm run build
+cd dist && zip -r ../../dist.zip . -x ".DS_Store" && cd ..
+```
 
-## 👀 Want to learn more?
+生成された `dist.zip` を Cloudflare ダッシュボードの `Workers & Pages → blog-koharu → Create deployment` からアップロードします。
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+> GitHub連携による自動デプロイは、今後 API Token 方式で設定予定です。
 
-## Credit
+## 🌷 運営者
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+- こはる（現役看護師・3児の母）
+- お問い合わせ：<koharu.nurse.info@gmail.com>

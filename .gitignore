@@ -1,7 +1,11 @@
 # build output
 dist/
+dist.zip
 # generated types
 .astro/
+
+# Claude Code ローカル設定
+.claude/
 
 # dependencies
 node_modules/

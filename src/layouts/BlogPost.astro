@@ -7,16 +7,26 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { CATEGORIES } from '../consts';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+	relatedPosts?: CollectionEntry<'blog'>[];
+};
 
-const { title, description, pubDate, updatedDate, heroImage, category } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, category, relatedPosts = [] } = Astro.props;
 const cat = CATEGORIES[category] ?? CATEGORIES.life;
 ---
 
 <!doctype html>
 <html lang="ja">
 	<head>
-		<BaseHead title={title} description={description} image={heroImage} />
+		<BaseHead
+			title={title}
+			description={description}
+			image={heroImage}
+			schemaType="article"
+			pubDate={pubDate}
+			updatedDate={updatedDate}
+			category={category}
+		/>
 	</head>
 
 	<body>
@@ -31,8 +41,16 @@ const cat = CATEGORIES[category] ?? CATEGORIES.life;
 					)}
 				</div>
 				<div class="prose container">
+					<!-- パンくず -->
+					<nav class="crumbs" aria-label="パンくず">
+						<a href="/">ホーム</a>
+						<span>／</span>
+						<a href="/blog/">記事一覧</a>
+						<span>／</span>
+						<a href={`/category/${category}/`}>{cat.label}</a>
+					</nav>
 					<div class="post-meta">
-						<span class="post-category">{cat.label}</span>
+						<a href={`/category/${category}/`} class="post-category">{cat.label}</a>
 						<span class="post-date">
 							<FormattedDate date={pubDate} />
 							{updatedDate && (
@@ -46,6 +64,30 @@ const cat = CATEGORIES[category] ?? CATEGORIES.life;
 						<slot />
 					</div>
 				</div>
+				{relatedPosts.length > 0 && (
+					<aside class="related container" aria-label="関連記事">
+						<h2 class="related-title">🌷 こちらも読まれています</h2>
+						<div class="related-grid">
+							{relatedPosts.map((rp) => {
+								const rcat = CATEGORIES[rp.data.category] ?? CATEGORIES.life;
+								return (
+									<a href={`/blog/${rp.id}/`} class="related-card">
+										<div class="related-thumb">
+											<span class="related-emoji">{rcat.emoji}</span>
+										</div>
+										<div class="related-body">
+											<span class="related-category">{rcat.label}</span>
+											<h3 class="related-heading">{rp.data.title}</h3>
+											<p class="related-date">
+												<FormattedDate date={rp.data.pubDate} />
+											</p>
+										</div>
+									</a>
+								);
+							})}
+						</div>
+					</aside>
+				)}
 			</article>
 		</main>
 		<Footer />
@@ -93,6 +135,18 @@ const cat = CATEGORIES[category] ?? CATEGORIES.life;
 		margin-bottom: 16px;
 		flex-wrap: wrap;
 	}
+	.crumbs {
+		font-size: 12px;
+		color: var(--text-sub);
+		margin-bottom: 16px;
+	}
+	.crumbs a {
+		color: var(--pink-deep);
+	}
+	.crumbs span {
+		margin: 0 6px;
+		color: var(--text-sub);
+	}
 	.post-category {
 		display: inline-block;
 		background: var(--bg-accent);
@@ -101,6 +155,11 @@ const cat = CATEGORIES[category] ?? CATEGORIES.life;
 		padding: 4px 12px;
 		border-radius: 100px;
 		font-weight: 700;
+		transition: background 0.2s;
+	}
+	.post-category:hover {
+		background: var(--pink-main);
+		color: white;
 	}
 	.post-date {
 		font-size: 13px;
@@ -165,6 +224,82 @@ const cat = CATEGORIES[category] ?? CATEGORIES.life;
 		}
 		.post-body :global(h3) {
 			font-size: 16px;
+		}
+	}
+
+	/* 関連記事セクション */
+	.related {
+		max-width: 1020px;
+		margin: 20px auto 60px;
+		padding: 40px 24px 0;
+		border-top: 1px solid var(--bg-accent);
+	}
+	.related-title {
+		font-size: 22px;
+		text-align: center;
+		margin-bottom: 32px;
+		color: var(--pink-deep);
+	}
+	.related-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 20px;
+	}
+	.related-card {
+		background: var(--bg-card);
+		border-radius: 16px;
+		overflow: hidden;
+		box-shadow: var(--shadow);
+		transition: transform 0.3s, box-shadow 0.3s;
+		display: block;
+	}
+	.related-card:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-hover);
+	}
+	.related-thumb {
+		aspect-ratio: 16 / 10;
+		background: linear-gradient(135deg, #f3e5e1, #e8d3cd);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.related-emoji {
+		font-size: 44px;
+	}
+	.related-body {
+		padding: 16px;
+	}
+	.related-category {
+		display: inline-block;
+		background: var(--bg-accent);
+		color: var(--pink-deep);
+		font-size: 11px;
+		padding: 3px 10px;
+		border-radius: 100px;
+		font-weight: 700;
+		margin-bottom: 8px;
+	}
+	.related-heading {
+		font-size: 15px;
+		font-weight: 700;
+		line-height: 1.5;
+		margin-bottom: 8px;
+	}
+	.related-date {
+		font-size: 12px;
+		color: var(--text-sub);
+		margin: 0;
+	}
+
+	@media (max-width: 1000px) {
+		.related-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 600px) {
+		.related-grid {
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

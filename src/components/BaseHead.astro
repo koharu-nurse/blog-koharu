@@ -2,18 +2,132 @@
 // すべてのページの<head>に入る共通要素
 import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
-import { SITE_TITLE } from '../consts';
+import {
+	SITE_TITLE,
+	SITE_DESCRIPTION,
+	SITE_AUTHOR,
+	CATEGORIES,
+	PRODUCTION_HOSTNAME,
+	GA4_MEASUREMENT_ID,
+	GTM_CONTAINER_ID,
+} from '../consts';
 import { Font } from 'astro:assets';
 
 interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	// 'website'（デフォルト）なら WebSite スキーマ、'article' なら BlogPosting スキーマを出す
+	schemaType?: 'website' | 'article';
+	// articleのときだけ使うメタデータ
+	pubDate?: Date;
+	updatedDate?: Date;
+	// articleのときのカテゴリスラッグ（パンくず構造化データに使用）
+	category?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-const { title, description, image } = Astro.props;
-const ogImage = image ? new URL(image.src, Astro.url) : undefined;
+const {
+	title,
+	description,
+	image,
+	schemaType = 'website',
+	pubDate,
+	updatedDate,
+	category,
+} = Astro.props;
+// 記事にheroImageがない場合のフォールバックOGP画像（SNSシェア時の見栄え確保）
+const ogImageURL = image
+	? new URL(image.src, Astro.url)
+	: new URL('/og-default.svg', Astro.site);
+
+// JSON-LD 構造化データ（Googleが記事情報を読みやすくするためのもの）
+const siteOrigin = Astro.site?.origin ?? '';
+const logoURL = new URL('/og-default.svg', Astro.site).toString();
+const websiteSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'WebSite',
+	name: SITE_TITLE,
+	url: siteOrigin,
+	description: SITE_DESCRIPTION,
+	inLanguage: 'ja-JP',
+	author: {
+		'@type': 'Person',
+		name: SITE_AUTHOR,
+	},
+	publisher: {
+		'@type': 'Organization',
+		name: SITE_TITLE,
+		logo: {
+			'@type': 'ImageObject',
+			url: logoURL,
+		},
+	},
+};
+const articleSchema =
+	schemaType === 'article' && pubDate
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'BlogPosting',
+				headline: title,
+				description,
+				image: ogImageURL.toString(),
+				datePublished: pubDate.toISOString(),
+				dateModified: (updatedDate ?? pubDate).toISOString(),
+				author: {
+					'@type': 'Person',
+					name: SITE_AUTHOR,
+				},
+				publisher: {
+					'@type': 'Organization',
+					name: SITE_TITLE,
+					logo: {
+						'@type': 'ImageObject',
+						url: logoURL,
+					},
+				},
+				mainEntityOfPage: {
+					'@type': 'WebPage',
+					'@id': canonicalURL.toString(),
+				},
+				inLanguage: 'ja-JP',
+			}
+		: null;
+// パンくず構造化データ（記事ページのみ）：検索結果に階層が表示される
+const categoryMeta = category ? CATEGORIES[category] : undefined;
+const breadcrumbSchema =
+	schemaType === 'article' && category && categoryMeta
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'BreadcrumbList',
+				itemListElement: [
+					{
+						'@type': 'ListItem',
+						position: 1,
+						name: 'ホーム',
+						item: siteOrigin + '/',
+					},
+					{
+						'@type': 'ListItem',
+						position: 2,
+						name: '記事一覧',
+						item: siteOrigin + '/blog/',
+					},
+					{
+						'@type': 'ListItem',
+						position: 3,
+						name: categoryMeta.label,
+						item: `${siteOrigin}/category/${category}/`,
+					},
+					{
+						'@type': 'ListItem',
+						position: 4,
+						name: title,
+						item: canonicalURL.toString(),
+					},
+				],
+			}
+		: null;
 ---
 
 <!-- 基本メタ -->
@@ -43,16 +157,57 @@ const ogImage = image ? new URL(image.src, Astro.url) : undefined;
 <meta name="description" content={description} />
 
 <!-- OGP -->
-<meta property="og:type" content="website" />
+<meta property="og:type" content={schemaType === 'article' ? 'article' : 'website'} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:locale" content="ja_JP" />
-{ogImage && <meta property="og:image" content={ogImage} />}
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:image" content={ogImageURL} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-{ogImage && <meta property="twitter:image" content={ogImage} />}
+<meta property="twitter:image" content={ogImageURL} />
+
+<!-- JSON-LD 構造化データ（検索エンジン向けのメタ情報） -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+{articleSchema && (
+	<script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+)}
+{breadcrumbSchema && (
+	<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+)}
+
+<!-- Google Tag Manager（本番ドメインでのみ有効化）-->
+<script is:inline define:vars={{ PRODUCTION_HOSTNAME, GTM_CONTAINER_ID, GA4_MEASUREMENT_ID }}>
+	// 本番ドメインでのみ計測タグを発火（pages.dev など仮URLでのノイズを除く）
+	if (typeof window !== 'undefined' && window.location.hostname === PRODUCTION_HOSTNAME) {
+		// Google Tag Manager
+		(function (w, d, s, l, i) {
+			w[l] = w[l] || [];
+			w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+			var f = d.getElementsByTagName(s)[0],
+				j = d.createElement(s),
+				dl = l != 'dataLayer' ? '&l=' + l : '';
+			j.async = true;
+			j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+			f.parentNode.insertBefore(j, f);
+		})(window, document, 'script', 'dataLayer', GTM_CONTAINER_ID);
+
+		// Google Analytics 4（GTM併用だが直接も入れて二重計測を避けるためGTM側で管理推奨）
+		var gaScript = document.createElement('script');
+		gaScript.async = true;
+		gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_MEASUREMENT_ID;
+		document.head.appendChild(gaScript);
+		window.dataLayer = window.dataLayer || [];
+		function gtag() {
+			window.dataLayer.push(arguments);
+		}
+		window.gtag = gtag;
+		gtag('js', new Date());
+		gtag('config', GA4_MEASUREMENT_ID);
+	}
+</script>

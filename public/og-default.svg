@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- 背景：ベージュ→くすみピンクのグラデーション -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#faf0ec"/>
+      <stop offset="100%" stop-color="#f3e5e1"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="20%" cy="30%" r="40%">
+      <stop offset="0%" stop-color="rgba(212, 165, 165, 0.3)"/>
+      <stop offset="100%" stop-color="rgba(212, 165, 165, 0)"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="85%" cy="75%" r="40%">
+      <stop offset="0%" stop-color="rgba(255, 255, 255, 0.7)"/>
+      <stop offset="100%" stop-color="rgba(255, 255, 255, 0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect width="1200" height="630" fill="url(#glow2)"/>
+
+  <!-- 上部バッジ -->
+  <rect x="450" y="130" width="300" height="50" rx="25" fill="#ffffff" opacity="0.95"/>
+  <text x="600" y="163" text-anchor="middle" font-family="'Zen Maru Gothic', 'Noto Sans JP', sans-serif" font-size="20" font-weight="700" fill="#b07878">看護師ママが発信中</text>
+
+  <!-- メインタイトル -->
+  <text x="600" y="290" text-anchor="middle" font-family="'Zen Maru Gothic', 'Noto Sans JP', sans-serif" font-size="56" font-weight="700" fill="#3d3835">ゆっくり、じぶんのペースで</text>
+  <text x="600" y="370" text-anchor="middle" font-family="'Zen Maru Gothic', 'Noto Sans JP', sans-serif" font-size="56" font-weight="700" fill="#3d3835">お金と暮らしを整える</text>
+
+  <!-- サブタイトル -->
+  <text x="600" y="440" text-anchor="middle" font-family="'Noto Sans JP', sans-serif" font-size="24" fill="#7a716e">家計管理・つみたてNISA・固定費見直し</text>
+
+  <!-- 下部サイト名 -->
+  <line x1="500" y1="500" x2="700" y2="500" stroke="#d4a5a5" stroke-width="2"/>
+  <text x="600" y="550" text-anchor="middle" font-family="'Zen Maru Gothic', 'Noto Sans JP', sans-serif" font-size="28" font-weight="700" fill="#b07878">看護師ママこはるの家計管理ブログ</text>
+</svg>

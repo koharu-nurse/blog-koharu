@@ -1,12 +1,19 @@
 ---
 // 404 ページが見つかりませんでした
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE } from '../consts';
+import FormattedDate from '../components/FormattedDate.astro';
+import { SITE_TITLE, CATEGORIES } from '../consts';
 
 const pageTitle = `ページが見つかりません | ${SITE_TITLE}`;
 const pageDesc = 'お探しのページは見つかりませんでした。';
+
+// 迷子の訪問者を救うため、最新記事を取得して導線を作る
+const latestPosts = (await getCollection('blog', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
 ---
 
 <!doctype html>
@@ -22,13 +29,36 @@ const pageDesc = 'お探しのページは見つかりませんでした。';
 				<h1>ページが見つかりません</h1>
 				<p class="msg">
 					URLが変わったか、削除された可能性があります。<br />
-					お手数ですが、トップページから探してみてください。
+					お手数ですが、下のボタンか人気の記事からお探しください。
 				</p>
 				<div class="actions">
 					<a href="/" class="btn">トップへもどる</a>
 					<a href="/blog/" class="btn-outline">記事一覧をみる</a>
 				</div>
 			</div>
+
+			{latestPosts.length > 0 && (
+				<section class="recent">
+					<h2>📝 新着記事</h2>
+					<ul class="recent-list">
+						{latestPosts.map((post) => {
+							const cat = CATEGORIES[post.data.category] ?? CATEGORIES.life;
+							return (
+								<li>
+									<a href={`/blog/${post.id}/`} class="recent-item">
+										<span class="recent-emoji">{cat.emoji}</span>
+										<span class="recent-body">
+											<span class="recent-cat">{cat.label}</span>
+											<span class="recent-title">{post.data.title}</span>
+											<span class="recent-date"><FormattedDate date={post.data.pubDate} /></span>
+										</span>
+									</a>
+								</li>
+							);
+						})}
+					</ul>
+				</section>
+			)}
 		</main>
 		<Footer />
 	</body>
@@ -36,8 +66,8 @@ const pageDesc = 'お探しのページは見つかりませんでした。';
 
 <style>
 	main {
-		max-width: 600px;
-		padding: 80px 24px;
+		max-width: 700px;
+		padding: 60px 24px;
 	}
 	.card {
 		background: var(--bg-card);
@@ -88,5 +118,64 @@ const pageDesc = 'お探しのページは見つかりませんでした。';
 	}
 	.btn-outline:hover {
 		background: var(--bg-accent);
+	}
+
+	/* 新着記事セクション */
+	.recent {
+		margin-top: 40px;
+		padding: 30px 24px;
+		background: var(--bg-card);
+		border-radius: 20px;
+		box-shadow: var(--shadow);
+		border: 1px solid var(--border);
+	}
+	.recent h2 {
+		font-size: 18px;
+		margin-bottom: 20px;
+		padding-bottom: 10px;
+		border-bottom: 2px solid var(--pink-main);
+	}
+	.recent-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+	.recent-item {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+		padding: 12px;
+		border-radius: 12px;
+		transition: background 0.2s;
+		color: var(--text-main);
+	}
+	.recent-item:hover {
+		background: var(--bg-accent);
+	}
+	.recent-emoji {
+		font-size: 32px;
+		flex-shrink: 0;
+	}
+	.recent-body {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+	.recent-cat {
+		font-size: 11px;
+		color: var(--pink-deep);
+		font-weight: 700;
+	}
+	.recent-title {
+		font-size: 14px;
+		font-weight: 700;
+		line-height: 1.5;
+	}
+	.recent-date {
+		font-size: 11px;
+		color: var(--text-sub);
 	}
 </style>

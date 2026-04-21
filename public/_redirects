@@ -4,14 +4,54 @@
 # 旧ドメイン koharu-nursu.com → koharu-nurse.com 移行は
 # Cloudflareダッシュボード側のRedirect Rulesで設定する
 # （このファイルでは同一サイト内の旧URL→新URLパスのみ管理）
-#
-# WordPress時代の旧URL（/?p=ID 形式や旧スラッグ）を
-# 新スラッグへ301リダイレクトしたい場合はここに追記:
-# /old-slug/ /blog/new-slug/ 301
-#
-# 例：
-# /sample-page/ /blog/welcome/ 301
 
-# WordPress既定のフィードURLは新フィードへ
+# ------------------------------------------------------------------
+# WordPress時代の旧フィードURLを新RSSへ
+# ------------------------------------------------------------------
 /feed/ /rss.xml 301
 /feed /rss.xml 301
+
+# ------------------------------------------------------------------
+# WordPress時代：/<slug>/ → 新：/blog/<slug>/
+# （koharu-nurse.com 旧サイトのパーマリンクは /%postname%/ 形式）
+# ------------------------------------------------------------------
+/5-habits-to-build-wealth-while-parenting/ /blog/5-habits-to-build-wealth-while-parenting/ 301
+/from-frugality-to-self-spending/ /blog/from-frugality-to-self-spending/ 301
+/health-first-for-wealth/ /blog/health-first-for-wealth/ 301
+/kids-diarrhea-vomiting-home-care/ /blog/kids-diarrhea-vomiting-home-care/ 301
+/kids-fever-when-to-see-doctor/ /blog/kids-fever-when-to-see-doctor/ 301
+/nurse-furusato-complete-guide/ /blog/nurse-furusato-complete-guide/ 301
+/nurse-mama-20million-yen-journey/ /blog/nurse-mama-20million-yen-journey/ 301
+/nurse-mama-fixed-cost-saving-tips/ /blog/nurse-mama-fixed-cost-saving-tips/ 301
+/nurse-mama-nisa-start-guide/ /blog/nurse-mama-nisa-start-guide/ 301
+/nurse-mama-time-management-shift-childcare/ /blog/nurse-mama-time-management-shift-childcare/ 301
+/parenting-with-unsupportive-husband/ /blog/parenting-with-unsupportive-husband/ 301
+/post-retirement-money-tips/ /blog/post-retirement-money-tips/ 301
+/pre-saving-rules-mom-of-three/ /blog/pre-saving-rules-mom-of-three/ 301
+/self-introduction/ /blog/self-introduction/ 301
+/summer-heatstroke-prevention-by-nurse-mom/ /blog/summer-heatstroke-prevention-by-nurse-mom/ 301
+/summer-heatstroke-signs-and-tips-for-kids/ /blog/summer-heatstroke-signs-and-tips-for-kids/ 301
+/toddler-tantrum-night-mom-heart-relief/ /blog/toddler-tantrum-night-mom-heart-relief/ 301
+/unemployment-benefits-special-reasons/ /blog/unemployment-benefits-special-reasons/ 301
+/welcome/ /blog/welcome/ 301
+/why-started-side-job-after-20million/ /blog/why-started-side-job-after-20million/ 301
+/zaim-to-moneyforward-me/ /blog/zaim-to-moneyforward-me/ 301
+
+# ------------------------------------------------------------------
+# 重複のため統合した記事・今後公開する予定の記事
+# ------------------------------------------------------------------
+# ふるさと納税：WP側は tax-guide、新サイトでは complete-guide に統合
+/nurse-furusato-tax-guide/ /blog/nurse-furusato-complete-guide/ 301
+# 保険見直し：現状下書き。公開までは固定費カテゴリへ案内
+/nurse-mama-insurance-review-saving/ /category/fixed-cost/ 302
+
+# ------------------------------------------------------------------
+# 新サイトに移行しなかった旧URL（夏風邪vs熱中症の比較記事）
+# 熱中症関連記事へ案内
+# ------------------------------------------------------------------
+/summer-cold-vs-heatstroke-kids/ /blog/summer-heatstroke-signs-and-tips-for-kids/ 301
+
+# ------------------------------------------------------------------
+# WordPress標準のクエリパラメータURL（?p=ID 形式）は捕捉できないが
+# 添付ファイルページや検索ページは404→カスタム404ページで処理
+# ------------------------------------------------------------------
