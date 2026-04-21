@@ -1,35 +1,53 @@
 /*
   グローバルスタイル
-  デザインコンセプト：やさしいベージュ×くすみピンク
-  cloudflare-site/index.html の試作デザインをベースにしたパレット
+  デザインコンセプト：STEEN風クラフト紙＋墨色
+  参考: https://cafe-steen.com/
+  アイボリー背景・墨色テキスト・ブロブ切り抜き・アウトライン英字
 */
 
 :root {
-	/* kumakoro 参考のクラフト紙風パレット：クリーム×濃緑×テラコッタ×黄土色 */
-	--bg-main: #f5efe2;          /* 背景：クリーム色の紙 */
-	--bg-card: #fffbf3;          /* カード背景：少し明るい白 */
-	--bg-accent: #eaf0dc;        /* アクセント：やわらかい緑 */
-	--bg-accent-warm: #f7e7ce;   /* アクセント：温かいベージュ */
-	--bg-accent-cool: #e6e9d8;   /* アクセント：セージ */
-	--forest-green: #5a7042;     /* 濃緑（メインアクセント） */
-	--moss-green: #8ba868;       /* やわらかい緑 */
-	--terracotta: #c97b5a;       /* テラコッタ */
-	--ochre: #d9a94a;            /* 黄土色 */
-	--cream-deep: #d9bf8a;       /* アクセント用クラフト色 */
-	/* 互換のための旧変数。既存コード修正を減らすため段階的に置換 */
-	--pink-main: #c97b5a;        /* 旧pink-mainはテラコッタに再マップ */
-	--pink-deep: #a65e3f;        /* 旧pink-deepは濃いテラコッタに */
-	--peach: #e8a97d;            /* ウォームピーチ */
-	--brown-warm: #7a5e3f;       /* ウォームブラウン */
-	--text-main: #3a2d1f;        /* 本文：深い茶色 */
-	--text-sub: #7a6854;         /* 補助：セピア */
-	--border: #d9cfbb;           /* 区切り線 */
-	--shadow: 0 4px 20px rgba(90, 70, 50, 0.08);
-	--shadow-hover: 0 8px 30px rgba(90, 70, 50, 0.15);
+	/* ベース：アイボリー × 墨色 */
+	--bg-main: #ede4d0;          /* アイボリー（少し濃いめ） */
+	--bg-card: #f5eddb;          /* 明るめアイボリー（カード） */
+	--bg-soft: #e3d8bf;          /* やや濃いアイボリー（区切り・差し色） */
+	--ink-main: #2a2520;         /* 墨色（本文・見出し） */
+	--ink-sub: #6b5d4f;          /* セピア（補助テキスト） */
+	--ink-light: #a89985;        /* 薄い墨（境界・日付など） */
+	--accent: #8a7a5c;           /* くすんだ金茶（差し色・アクセント） */
+	--accent-deep: #5a4a32;      /* 濃い金茶（ホバー等） */
+
+	/* カテゴリ別ブロブカラー（STEEN風：くすんだトーン7色） */
+	--blob-household: #d4c4a0;   /* オリーブベージュ（家計管理） */
+	--blob-nisa: #b8c4a8;        /* セージグリーン（投資） */
+	--blob-fixed-cost: #c9b896;  /* カーキベージュ（固定費） */
+	--blob-furusato: #d6a687;    /* テラコッタベージュ（ふるさと納税） */
+	--blob-parenting: #c4b5a0;   /* ウォームベージュ（子育て） */
+	--blob-life: #a8b5b8;        /* ダスティブルー（暮らし） */
+	--blob-nurse: #d4a99e;       /* ロゼベージュ（看護師） */
+
+	/* 互換用：既存コードで使われる旧変数を墨色系に再マップ */
+	--text-main: #2a2520;
+	--text-sub: #6b5d4f;
+	--border: #d4c9b3;
+	--bg-accent: #e3d8bf;
+	--bg-accent-warm: #e3d8bf;
+	--bg-accent-cool: #e3d8bf;
+	--pink-main: #8a7a5c;
+	--pink-deep: #5a4a32;
+	--forest-green: #5a4a32;
+	--moss-green: #8a7a5c;
+	--terracotta: #8a7a5c;
+	--ochre: #8a7a5c;
+	--cream-deep: #d4c4a0;
+	--peach: #d6a687;
+	--brown-warm: #5a4a32;
+
+	--shadow: 0 4px 18px rgba(42, 37, 32, 0.06);
+	--shadow-hover: 0 10px 28px rgba(42, 37, 32, 0.12);
 
 	--font-body: 'Noto Sans JP', sans-serif;
 	--font-heading: 'Noto Serif JP', serif;
-	--font-display: 'Klee One', 'Noto Serif JP', serif;
+	--font-display: 'Jost', 'Noto Sans JP', sans-serif;
 
 	--container-max: 1100px;
 	--container-pad: 24px;
@@ -43,12 +61,12 @@
 
 body {
 	font-family: var(--font-body);
-	/* 紙の質感を出すためのごく薄いノイズテクスチャ（SVG data URI） */
+	/* 紙の質感：やや強めのノイズで手触りを出す */
 	background-color: var(--bg-main);
-	background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+	background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.18  0 0 0 0 0.14  0 0 0 0 0.1  0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
 	background-repeat: repeat;
-	color: var(--text-main);
-	line-height: 1.8;
+	color: var(--ink-main);
+	line-height: 1.9;
 	font-size: 16px;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
@@ -66,13 +84,14 @@ img {
 	border-radius: 8px;
 }
 
-/* 見出しは丸ゴシックで柔らかく */
+/* 見出し：細めのセリフで静かに */
 h1, h2, h3, h4, h5, h6 {
 	font-family: var(--font-heading);
-	font-weight: 700;
-	color: var(--text-main);
-	line-height: 1.5;
+	font-weight: 500;
+	color: var(--ink-main);
+	line-height: 1.6;
 	margin: 0 0 0.5rem 0;
+	letter-spacing: 0.02em;
 }
 
 p {
@@ -81,34 +100,37 @@ p {
 
 strong, b {
 	font-weight: 700;
-	color: var(--text-main);
+	color: var(--ink-main);
 }
 
 hr {
 	border: none;
-	border-top: 1px dashed var(--border);
+	border-top: 1px solid var(--border);
 	margin: 2em 0;
 }
 
-/* リンクスタイル（本文中） */
+/* 本文中のリンク：墨色＋細いアンダーライン */
 .prose a {
-	color: var(--pink-deep);
+	color: var(--ink-main);
 	text-decoration: underline;
-	text-decoration-color: var(--pink-main);
-	text-underline-offset: 3px;
+	text-decoration-color: var(--accent);
+	text-decoration-thickness: 1.5px;
+	text-underline-offset: 4px;
+	transition: color 0.2s;
 }
 .prose a:hover {
-	color: var(--pink-main);
+	color: var(--accent-deep);
 }
 
-/* 引用 */
+/* 引用：墨色の左罫でシンプルに */
 blockquote {
-	background: var(--bg-accent);
-	border-left: 4px solid var(--pink-main);
-	padding: 16px 20px;
+	background: var(--bg-card);
+	border-left: 3px solid var(--ink-main);
+	padding: 18px 22px;
 	margin: 1.5em 0;
-	border-radius: 0 12px 12px 0;
-	color: var(--text-main);
+	border-radius: 0;
+	color: var(--ink-sub);
+	font-style: italic;
 }
 blockquote p:last-child {
 	margin-bottom: 0;
@@ -117,15 +139,15 @@ blockquote p:last-child {
 /* コード */
 code {
 	padding: 2px 6px;
-	background: var(--bg-accent);
-	border-radius: 4px;
+	background: var(--bg-soft);
+	border-radius: 3px;
 	font-size: 0.9em;
-	color: var(--pink-deep);
+	color: var(--accent-deep);
 }
 pre {
 	padding: 1.2em;
-	background: #fdf8f5;
-	border-radius: 12px;
+	background: #f0e6d0;
+	border-radius: 6px;
 	overflow-x: auto;
 	margin-bottom: 1em;
 	border: 1px solid var(--border);
@@ -147,25 +169,29 @@ table td {
 	text-align: left;
 }
 table th {
-	background: var(--bg-accent);
-	color: var(--pink-deep);
+	background: var(--bg-soft);
+	color: var(--ink-main);
 	font-weight: 700;
 }
 
-/* ボタン共通 */
+/* ボタン：墨色ベースのシンプルなピル */
 .btn {
 	display: inline-block;
-	background: var(--pink-main);
-	color: #fff !important;
-	padding: 12px 24px;
+	background: var(--ink-main);
+	color: var(--bg-main) !important;
+	padding: 14px 28px;
 	border-radius: 100px;
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 700;
-	transition: background 0.2s;
+	letter-spacing: 0.08em;
+	transition: background 0.2s, transform 0.2s;
 	text-decoration: none !important;
+	font-family: var(--font-display);
+	text-transform: uppercase;
 }
 .btn:hover {
-	background: var(--pink-deep);
+	background: var(--accent-deep);
+	transform: translateY(-1px);
 }
 
 /* レイアウトコンテナ */
@@ -173,6 +199,54 @@ table th {
 	max-width: var(--container-max);
 	margin: 0 auto;
 	padding: 0 var(--container-pad);
+}
+
+/* ============================
+   STEEN風ユーティリティクラス
+   ============================ */
+
+/* ブロブ形状（有機的な不定形）：カテゴリ背景・画像切り抜き用 */
+.blob-shape {
+	border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+}
+.blob-shape-2 {
+	border-radius: 42% 58% 46% 54% / 60% 40% 60% 40%;
+}
+.blob-shape-3 {
+	border-radius: 56% 44% 70% 30% / 40% 60% 40% 60%;
+}
+.blob-shape-4 {
+	border-radius: 68% 32% 38% 62% / 52% 62% 38% 48%;
+}
+
+/* アウトライン英字：セクション大見出し用 */
+.outline-text {
+	-webkit-text-stroke: 1.5px var(--ink-main);
+	color: transparent;
+	font-family: var(--font-display);
+	font-weight: 500;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+/* スタンプ風：文字にザラザラテクスチャを重ねる（ロゴ・強調語用） */
+.stamp {
+	position: relative;
+	display: inline-block;
+	font-family: var(--font-heading);
+	font-weight: 700;
+	color: var(--ink-main);
+	letter-spacing: 0.04em;
+}
+.stamp::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='2' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93  0 0 0 0 0.89  0 0 0 0 0.82  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23s)'/%3E%3C/svg%3E");
+	background-size: 120px 120px;
+	mix-blend-mode: lighten;
+	pointer-events: none;
+	opacity: 0.4;
 }
 
 /* スクリーンリーダー専用 */

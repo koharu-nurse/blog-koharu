@@ -9,6 +9,7 @@ export default defineConfig({
 	integrations: [mdx(), sitemap()],
 	fonts: [
 		{
+			// 本文用：Noto Sans JPでやわらかい明るさを保つ
 			provider: fontProviders.google(),
 			name: 'Noto Sans JP',
 			cssVariable: '--font-body',
@@ -18,24 +19,24 @@ export default defineConfig({
 			subsets: ['japanese', 'latin'],
 		},
 		{
-			// 見出し用：太めのセリフでエディトリアル雑誌風の印象に
+			// 見出し用：STEEN風の細めセリフでエディトリアル感
 			provider: fontProviders.google(),
 			name: 'Noto Serif JP',
 			cssVariable: '--font-heading',
 			fallbacks: ['serif'],
-			weights: [700, 900],
+			weights: [400, 500, 700],
 			styles: ['normal'],
 			subsets: ['japanese', 'latin'],
 		},
 		{
-			// ブランド・セクションタイトル用：手書きペン風で温かみを出す
+			// 英字見出し・アウトライン用：太めサンセリフ
 			provider: fontProviders.google(),
-			name: 'Klee One',
+			name: 'Jost',
 			cssVariable: '--font-display',
-			fallbacks: ['serif'],
-			weights: [400, 600],
+			fallbacks: ['sans-serif'],
+			weights: [400, 500, 700],
 			styles: ['normal'],
-			subsets: ['japanese', 'latin'],
+			subsets: ['latin'],
 		},
 	],
 });

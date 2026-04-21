@@ -39,13 +39,21 @@ export const NAV_ITEMS = [
 	{ label: '🔍 検索', href: '/search/' },
 ];
 
-// カテゴリ → 表示名・絵文字
-export const CATEGORIES: Record<string, { label: string; emoji: string }> = {
-	household: { label: '家計管理', emoji: '💰' },
-	nisa: { label: '投資', emoji: '📈' },
-	'fixed-cost': { label: '固定費見直し', emoji: '📱' },
-	furusato: { label: 'ふるさと納税', emoji: '🎁' },
-	parenting: { label: '子育て', emoji: '👶' },
-	life: { label: '暮らし', emoji: '💡' },
-	nurse: { label: '看護師', emoji: '👩‍⚕️' },
+// カテゴリ → 表示名・絵文字・ブロブ背景色・英字ラベル・イラストパス
+// blobColor はSTEEN風ブロブ背景に使う色。イラストが背景と同色で溶けないための区別色
+// illustration が未指定のカテゴリは絵文字でフォールバック表示される
+export const CATEGORIES: Record<
+	string,
+	{ label: string; emoji: string; blobColor: string; en: string; illustration?: string }
+> = {
+	household: { label: '家計管理', emoji: '💰', blobColor: '#d4c4a0', en: 'HOUSEHOLD', illustration: '/illustrations/household.png' },
+	nisa: { label: '投資', emoji: '📈', blobColor: '#b8c4a8', en: 'NISA', illustration: '/illustrations/nisa.png' },
+	'fixed-cost': { label: '固定費見直し', emoji: '📱', blobColor: '#c9b896', en: 'FIXED COST', illustration: '/illustrations/fixed-cost.png' },
+	furusato: { label: 'ふるさと納税', emoji: '🎁', blobColor: '#d6a687', en: 'FURUSATO', illustration: '/illustrations/furusato.png' },
+	parenting: { label: '子育て', emoji: '👶', blobColor: '#c4b5a0', en: 'PARENTING', illustration: '/illustrations/parenting.png' },
+	life: { label: '暮らし', emoji: '💡', blobColor: '#a8b5b8', en: 'LIFE', illustration: '/illustrations/life.png' },
+	nurse: { label: '看護師', emoji: '👩‍⚕️', blobColor: '#d4a99e', en: 'NURSE', illustration: '/illustrations/nurse.png' },
 };
+
+// プロフィール用アバター画像（看護師キャラ）
+export const AVATAR_ILLUSTRATION = '/illustrations/avatar.png';

@@ -7,6 +7,7 @@ const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 	slug,
 	label: meta.label,
 	emoji: meta.emoji,
+	en: meta.en,
 }));
 ---
 
@@ -15,7 +16,8 @@ const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 		<div class="footer-grid">
 			<!-- サイト情報 -->
 			<div class="footer-col">
-				<h3 class="footer-heading">🌷 {SITE_TITLE}</h3>
+				<span class="footer-brand-en">Koharu Nurse Blog</span>
+				<h3 class="footer-heading">{SITE_TITLE}</h3>
 				<p class="footer-desc">{SITE_TAGLINE}</p>
 				<p class="footer-desc-small">
 					3児のママで現役看護師のこはるが、<br />
@@ -25,7 +27,7 @@ const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 
 			<!-- カテゴリ -->
 			<div class="footer-col">
-				<h3 class="footer-heading">カテゴリ</h3>
+				<h3 class="footer-heading"><span class="footer-en">Category</span>カテゴリ</h3>
 				<ul class="footer-list">
 					{categoryLinks.map((c) => (
 						<li>
@@ -40,7 +42,7 @@ const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 
 			<!-- 情報 -->
 			<div class="footer-col">
-				<h3 class="footer-heading">このサイトについて</h3>
+				<h3 class="footer-heading"><span class="footer-en">Information</span>このサイトについて</h3>
 				<ul class="footer-list">
 					<li><a href="/about/">プロフィール</a></li>
 					<li><a href="/blog/">記事一覧</a></li>
@@ -63,10 +65,10 @@ const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 
 <style>
 	.footer {
-		background: var(--bg-accent);
-		margin-top: 60px;
-		padding: 50px 24px 30px;
-		color: var(--text-sub);
+		background: var(--bg-soft);
+		margin-top: 80px;
+		padding: 60px 24px 32px;
+		color: var(--ink-sub);
 		font-size: 13px;
 	}
 	.footer-container {
@@ -75,33 +77,57 @@ const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 	}
 	.footer-grid {
 		display: grid;
-		grid-template-columns: 1.4fr 1fr 1fr;
+		grid-template-columns: 1.6fr 1fr 1fr;
 		gap: 40px;
-		margin-bottom: 32px;
+		margin-bottom: 36px;
 	}
 	.footer-col {
 		display: flex;
 		flex-direction: column;
 	}
-	.footer-heading {
-		font-size: 16px;
-		font-weight: 600;
-		color: var(--text-main);
-		margin-bottom: 14px;
-		padding-bottom: 8px;
-		border-bottom: 2px solid var(--pink-main);
+	.footer-brand-en {
 		font-family: var(--font-display);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.3em;
+		color: var(--accent);
+		text-transform: uppercase;
+		margin-bottom: 8px;
+	}
+	.footer-heading {
+		font-family: var(--font-heading);
+		font-size: 16px;
+		font-weight: 500;
+		color: var(--ink-main);
+		margin-bottom: 16px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid var(--ink-main);
+		letter-spacing: 0.05em;
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+	.footer-en {
+		font-family: var(--font-display);
+		font-size: 10px;
+		font-weight: 500;
+		letter-spacing: 0.3em;
+		color: var(--accent);
+		text-transform: uppercase;
 	}
 	.footer-desc {
-		font-size: 12px;
-		color: var(--pink-deep);
+		font-family: var(--font-display);
+		font-size: 10px;
 		font-weight: 700;
-		margin-bottom: 10px;
-		letter-spacing: 0.05em;
+		color: var(--accent);
+		margin-bottom: 12px;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
 	}
 	.footer-desc-small {
 		font-size: 12px;
-		line-height: 1.8;
+		line-height: 1.9;
+		color: var(--ink-sub);
 	}
 	.footer-list {
 		list-style: none;
@@ -109,25 +135,25 @@ const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 		margin: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: 10px;
 	}
 	.footer-list a {
 		font-size: 13px;
-		color: var(--text-sub);
+		color: var(--ink-sub);
 		transition: color 0.2s;
 		display: inline-flex;
 		align-items: center;
-		gap: 6px;
+		gap: 8px;
 	}
 	.footer-list a:hover {
-		color: var(--pink-deep);
+		color: var(--ink-main);
 	}
 	.footer-cat-emoji {
 		font-size: 14px;
 	}
 	.footer-bottom {
 		padding-top: 24px;
-		border-top: 1px dashed var(--border);
+		border-top: 1px solid var(--border);
 		text-align: center;
 	}
 	.footer-bottom p {
@@ -136,17 +162,16 @@ const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 	}
 	.footer-disclaimer {
 		font-size: 11px;
-		color: var(--text-sub);
-		opacity: 0.8;
+		color: var(--ink-light);
 	}
 
 	@media (max-width: 768px) {
 		.footer-grid {
 			grid-template-columns: 1fr;
-			gap: 30px;
+			gap: 32px;
 		}
 		.footer {
-			padding: 40px 20px 24px;
+			padding: 50px 20px 28px;
 		}
 	}
 </style>

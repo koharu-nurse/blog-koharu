@@ -41,20 +41,28 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://koharu-nurse
 					{heroImage ? (
 						<Image width={1020} height={510} src={heroImage} alt="" />
 					) : (
-						<div class="hero-placeholder"><span>{cat.emoji}</span></div>
+						<div class="hero-placeholder">
+							<div class="hero-placeholder-blob" style={`background: ${cat.blobColor};`}></div>
+							{cat.illustration ? (
+								<img class="hero-placeholder-illust" src={cat.illustration} alt="" />
+							) : (
+								<span class="hero-placeholder-emoji">{cat.emoji}</span>
+							)}
+							<span class="hero-placeholder-en">{cat.en}</span>
+						</div>
 					)}
 				</div>
 				<div class="prose container">
 					<!-- パンくず -->
 					<nav class="crumbs" aria-label="パンくず">
-						<a href="/">ホーム</a>
-						<span>／</span>
-						<a href="/blog/">記事一覧</a>
-						<span>／</span>
-						<a href={`/category/${category}/`}>{cat.label}</a>
+						<a href="/">Home</a>
+						<span>/</span>
+						<a href="/blog/">Articles</a>
+						<span>/</span>
+						<a href={`/category/${category}/`}>{cat.en}</a>
 					</nav>
 					<div class="post-meta">
-						<a href={`/category/${category}/`} class="post-category">{cat.label}</a>
+						<a href={`/category/${category}/`} class="post-category">{cat.en}</a>
 						<span class="post-date">
 							<FormattedDate date={pubDate} />
 							{updatedDate && (
@@ -71,17 +79,25 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://koharu-nurse
 				<ShareButtons title={title} url={shareUrl} />
 				{relatedPosts.length > 0 && (
 					<aside class="related container" aria-label="関連記事">
-						<h2 class="related-title">🌷 こちらも読まれています</h2>
+						<div class="related-head">
+							<span class="related-en outline-text">Related</span>
+							<h2 class="related-title">こちらも読まれています</h2>
+						</div>
 						<div class="related-grid">
 							{relatedPosts.map((rp) => {
 								const rcat = CATEGORIES[rp.data.category] ?? CATEGORIES.life;
 								return (
 									<a href={`/blog/${rp.id}/`} class="related-card">
 										<div class="related-thumb">
-											<span class="related-emoji">{rcat.emoji}</span>
+											<div class="related-blob blob-shape-2" style={`background: ${rcat.blobColor};`}></div>
+											{rcat.illustration ? (
+												<img class="related-illust" src={rcat.illustration} alt="" loading="lazy" />
+											) : (
+												<span class="related-emoji">{rcat.emoji}</span>
+											)}
 										</div>
 										<div class="related-body">
-											<span class="related-category">{rcat.label}</span>
+											<span class="related-category">{rcat.en}</span>
 											<h3 class="related-heading">{rp.data.title}</h3>
 											<p class="related-date">
 												<FormattedDate date={rp.data.pubDate} />
@@ -103,112 +119,173 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://koharu-nurse
 	main {
 		padding: 0;
 	}
+	/* ============================
+	   記事ヒーロー画像／プレースホルダー
+	   ============================ */
 	.hero-image {
 		max-width: 1020px;
-		margin: 30px auto 0;
+		margin: 40px auto 0;
 		padding: 0 24px;
 	}
 	.hero-image :global(img) {
 		display: block;
 		margin: 0 auto;
-		border-radius: 16px;
+		border-radius: 20px;
 		box-shadow: var(--shadow);
 		width: 100%;
 		height: auto;
 	}
+	/* heroImage未設定時のブロブ＋絵文字＋アウトライン英字 */
 	.hero-placeholder {
-		/* heroImage未設定時のフォールバック。絵文字のみなので帯状にコンパクト化 */
-		aspect-ratio: 4 / 1;
-		background: linear-gradient(135deg, #eaf0dc, #f7e7ce);
-		border-radius: 16px;
+		aspect-ratio: 16 / 7;
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		overflow: hidden;
+	}
+	.hero-placeholder-blob {
+		position: absolute;
+		width: 46%;
+		aspect-ratio: 1 / 1;
+		border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+	}
+	.hero-placeholder-emoji {
+		position: relative;
+		z-index: 2;
 		font-size: 72px;
-		box-shadow: var(--shadow);
+	}
+	.hero-placeholder-illust {
+		position: absolute;
+		z-index: 2;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 42%;
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
+		border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+	}
+	.hero-placeholder-en {
+		position: absolute;
+		right: 20px;
+		bottom: 10px;
+		font-family: var(--font-display);
+		font-size: 40px;
+		font-weight: 500;
+		letter-spacing: 0.12em;
+		-webkit-text-stroke: 1px var(--ink-main);
+		color: transparent;
+		text-transform: uppercase;
+		z-index: 1;
 	}
 
+	/* ============================
+	   記事本文
+	   ============================ */
 	.prose {
 		max-width: 760px;
 		margin: 0 auto;
-		padding: 40px 24px 60px;
-		color: var(--text-main);
+		padding: 50px 24px 60px;
+		color: var(--ink-main);
+	}
+	.crumbs {
+		font-family: var(--font-display);
+		font-size: 11px;
+		letter-spacing: 0.15em;
+		color: var(--ink-light);
+		margin-bottom: 24px;
+		text-transform: uppercase;
+	}
+	.crumbs a {
+		color: var(--ink-sub);
+		transition: color 0.2s;
+	}
+	.crumbs a:hover {
+		color: var(--ink-main);
+	}
+	.crumbs span {
+		margin: 0 8px;
+		color: var(--ink-light);
 	}
 	.post-meta {
 		display: flex;
 		align-items: center;
 		gap: 16px;
-		margin-bottom: 16px;
+		margin-bottom: 20px;
 		flex-wrap: wrap;
-	}
-	.crumbs {
-		font-size: 12px;
-		color: var(--text-sub);
-		margin-bottom: 16px;
-	}
-	.crumbs a {
-		color: var(--pink-deep);
-	}
-	.crumbs span {
-		margin: 0 6px;
-		color: var(--text-sub);
 	}
 	.post-category {
 		display: inline-block;
-		background: var(--bg-accent);
-		color: var(--pink-deep);
-		font-size: 12px;
-		padding: 4px 12px;
-		border-radius: 100px;
+		font-family: var(--font-display);
+		font-size: 10px;
 		font-weight: 700;
-		transition: background 0.2s;
+		letter-spacing: 0.2em;
+		color: var(--accent);
+		transition: color 0.2s;
 	}
 	.post-category:hover {
-		background: var(--pink-main);
-		color: white;
+		color: var(--ink-main);
 	}
 	.post-date {
-		font-size: 13px;
-		color: var(--text-sub);
+		font-family: var(--font-display);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		color: var(--ink-light);
 	}
 	.updated {
 		margin-left: 8px;
 	}
 	.post-title {
-		font-size: 28px;
-		line-height: 1.5;
-		margin-bottom: 24px;
-		font-family: var(--font-display);
-		font-weight: 600;
+		font-family: var(--font-heading);
+		font-size: 32px;
+		font-weight: 500;
+		line-height: 1.6;
+		letter-spacing: 0.04em;
+		margin-bottom: 28px;
 	}
 	hr {
-		margin: 24px 0 32px;
+		border: none;
+		border-top: 1px solid var(--border);
+		margin: 28px 0 36px;
 	}
+	/* 記事本文の見出し：墨色シンプル系 */
 	.post-body :global(h2) {
+		font-family: var(--font-heading);
 		font-size: 22px;
+		font-weight: 700;
 		margin-top: 2.5em;
 		margin-bottom: 0.8em;
-		padding: 12px 16px;
-		background: var(--bg-accent);
-		border-left: 5px solid var(--pink-main);
-		border-radius: 0 8px 8px 0;
+		padding-bottom: 12px;
+		border-bottom: 2px solid var(--ink-main);
+		color: var(--ink-main);
+		letter-spacing: 0.04em;
 	}
 	.post-body :global(h3) {
+		font-family: var(--font-heading);
 		font-size: 18px;
+		font-weight: 700;
 		margin-top: 2em;
 		margin-bottom: 0.6em;
-		padding-bottom: 6px;
-		border-bottom: 2px dashed var(--pink-main);
-		color: var(--pink-deep);
+		padding-left: 14px;
+		border-left: 4px solid var(--accent);
+		color: var(--ink-main);
 	}
 	.post-body :global(h4) {
+		font-family: var(--font-heading);
 		font-size: 16px;
+		font-weight: 700;
 		margin-top: 1.5em;
 		margin-bottom: 0.5em;
+		color: var(--ink-main);
 	}
 	.post-body :global(p) {
 		margin-bottom: 1.4em;
-		line-height: 1.9;
+		line-height: 2;
+		color: var(--ink-main);
 	}
 	.post-body :global(ul),
 	.post-body :global(ol) {
@@ -218,8 +295,8 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://koharu-nurse
 		margin-bottom: 0.4em;
 	}
 	.post-body :global(img) {
-		margin: 1.5em auto;
-		border-radius: 12px;
+		margin: 1.8em auto;
+		border-radius: 16px;
 		box-shadow: var(--shadow);
 	}
 
@@ -233,70 +310,106 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://koharu-nurse
 		.post-body :global(h3) {
 			font-size: 16px;
 		}
+		.hero-placeholder-emoji {
+			font-size: 56px;
+		}
+		.hero-placeholder-en {
+			font-size: 28px;
+		}
 	}
 
-	/* 関連記事セクション */
+	/* ============================
+	   関連記事セクション
+	   ============================ */
 	.related {
 		max-width: 1020px;
-		margin: 20px auto 60px;
-		padding: 40px 24px 0;
-		border-top: 1px solid var(--bg-accent);
+		margin: 40px auto 80px;
+		padding: 60px 24px 0;
+		border-top: 1px solid var(--border);
+	}
+	.related-head {
+		text-align: center;
+		margin-bottom: 40px;
+	}
+	.related-en {
+		display: block;
+		font-size: 48px;
+		margin-bottom: -14px;
 	}
 	.related-title {
-		font-size: 22px;
-		text-align: center;
-		margin-bottom: 32px;
-		color: var(--pink-deep);
+		font-family: var(--font-heading);
+		font-size: 20px;
+		font-weight: 500;
+		color: var(--ink-main);
+		letter-spacing: 0.06em;
 	}
 	.related-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 20px;
+		gap: 28px;
 	}
 	.related-card {
-		background: var(--bg-card);
-		border-radius: 16px;
-		overflow: hidden;
-		box-shadow: var(--shadow);
-		transition: transform 0.3s, box-shadow 0.3s;
 		display: block;
+		color: inherit;
+		transition: transform 0.3s;
 	}
 	.related-card:hover {
 		transform: translateY(-4px);
-		box-shadow: var(--shadow-hover);
+	}
+	.related-card:hover .related-blob {
+		transform: rotate(-3deg) scale(1.02);
 	}
 	.related-thumb {
-		aspect-ratio: 16 / 10;
-		background: linear-gradient(135deg, #eaf0dc, #f7e7ce);
+		aspect-ratio: 1 / 1;
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		margin-bottom: 14px;
+	}
+	.related-blob {
+		position: absolute;
+		inset: 8%;
+		transition: transform 0.4s ease;
 	}
 	.related-emoji {
-		font-size: 44px;
+		font-size: 56px;
+		position: relative;
+		z-index: 1;
+	}
+	.related-illust {
+		position: absolute;
+		inset: 8%;
+		width: 84%;
+		height: 84%;
+		object-fit: cover;
+		border-radius: 42% 58% 46% 54% / 60% 40% 60% 40%;
+		z-index: 1;
 	}
 	.related-body {
-		padding: 16px;
+		padding: 0 4px;
 	}
 	.related-category {
 		display: inline-block;
-		background: var(--bg-accent);
-		color: var(--pink-deep);
-		font-size: 11px;
-		padding: 3px 10px;
-		border-radius: 100px;
+		font-family: var(--font-display);
+		font-size: 10px;
 		font-weight: 700;
+		letter-spacing: 0.2em;
+		color: var(--accent);
 		margin-bottom: 8px;
 	}
 	.related-heading {
-		font-size: 15px;
-		font-weight: 700;
-		line-height: 1.5;
-		margin-bottom: 8px;
+		font-family: var(--font-heading);
+		font-size: 14px;
+		font-weight: 500;
+		line-height: 1.7;
+		margin-bottom: 6px;
 	}
 	.related-date {
-		font-size: 12px;
-		color: var(--text-sub);
+		font-family: var(--font-display);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		color: var(--ink-light);
 		margin: 0;
 	}
 

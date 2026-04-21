@@ -1,12 +1,12 @@
 ---
-// トップページ：ヒーロー＋新着記事＋プロフィール
+// トップページ：ヒーロー＋新着記事＋プロフィール（STEEN風：アイボリー×墨色×ブロブ）
 import { getCollection } from 'astro:content';
 import { Image } from 'astro:assets';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import { SITE_TITLE, SITE_DESCRIPTION, PROFILE, CATEGORIES } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, PROFILE, CATEGORIES, AVATAR_ILLUSTRATION } from '../consts';
 
 // 公開記事を新しい順に取得（draft=trueは除外）
 const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
@@ -31,6 +31,8 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 	slug,
 	label: meta.label,
 	emoji: meta.emoji,
+	blobColor: meta.blobColor,
+	en: meta.en,
 	count: allPosts.filter((p) => p.data.category === slug).length,
 }));
 ---
@@ -43,39 +45,54 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 	<body>
 		<Header />
 
-		<!-- ヒーロー -->
+		<!-- ヒーロー：アウトライン英字＋ブロブ装飾 -->
 		<section class="hero">
-			<div class="hero-content">
-				<span class="hero-badge">
-					<span class="bracket-l" aria-hidden="true">＼</span>
-					看護師ママが発信中
-					<span class="bracket-r" aria-hidden="true">／</span>
-				</span>
-				<h1>ゆっくり、じぶんのペースで<br />お金と暮らしを整える</h1>
-				<p>
-					3児のママで現役看護師のこはるが、<br />
-					資産2000万円を達成するまでの家計管理・つみたてNISA・固定費見直しの実体験を、<br />
-					やさしい言葉でお届けします。
-				</p>
+			<div class="hero-content container">
+				<div class="hero-text">
+					<span class="hero-kicker">Koharu Nurse Blog</span>
+					<h1 class="hero-title">
+						<span class="hero-title-line">ゆっくり、じぶんのペースで</span>
+						<span class="hero-title-line"><span class="hero-title-em">お金と暮らし</span>を整える</span>
+					</h1>
+					<p class="hero-lead">
+						3児のママで現役看護師のこはるが、<br />
+						資産2000万円を達成するまでの家計管理・つみたてNISA・固定費見直しの実体験を、やさしい言葉でお届けします。
+					</p>
+					<a href="#featured" class="btn hero-btn">Read Articles</a>
+				</div>
+				<div class="hero-visual" aria-hidden="true">
+					<div class="hero-blob hero-blob-1"></div>
+					<div class="hero-blob hero-blob-2"></div>
+					<div class="hero-blob hero-blob-3"></div>
+					<span class="hero-outline">KOHARU</span>
+				</div>
 			</div>
 		</section>
 
 		<!-- イチオシ記事（主力3本） -->
 		{featuredPosts.length > 0 && (
-			<section class="featured container">
-				<h2 class="section-title">こはるのイチオシ記事</h2>
-				<p class="featured-lead">まずはここから読んでほしい、3児ママ看護師の実体験まとめ🌷</p>
+			<section class="featured container" id="featured">
+				<div class="section-head">
+					<span class="section-en outline-text">Featured</span>
+					<h2 class="section-ja">こはるのイチオシ記事</h2>
+					<p class="section-lead">まずはここから読んでほしい、3児ママ看護師の実体験まとめ</p>
+				</div>
 				<div class="featured-grid">
 					{featuredPosts.map((post, i) => {
 						const cat = CATEGORIES[post.data.category] ?? CATEGORIES.life;
 						return (
 							<a href={`/blog/${post.id}/`} class="featured-card">
-								<span class="featured-rank">No.{i + 1}</span>
 								<div class="featured-thumb">
-									<span class="featured-emoji">{cat.emoji}</span>
+									<div class="featured-blob blob-shape" style={`background: ${cat.blobColor};`}></div>
+									{cat.illustration ? (
+										<img class="featured-illust" src={cat.illustration} alt="" loading="lazy" />
+									) : (
+										<span class="featured-emoji">{cat.emoji}</span>
+									)}
+									<span class="featured-rank">No.{String(i + 1).padStart(2, '0')}</span>
 								</div>
 								<div class="featured-body">
-									<span class="featured-category">{cat.label}</span>
+									<span class="featured-category">{cat.en}</span>
 									<h3 class="featured-title">{post.data.title}</h3>
 								</div>
 							</a>
@@ -85,24 +102,43 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 			</section>
 		)}
 
-		<!-- カテゴリから探す -->
+		<!-- カテゴリから探す：ブロブ7色 -->
 		<section class="categories container">
-			<h2 class="section-title">カテゴリから探す</h2>
+			<div class="section-head">
+				<span class="section-en outline-text">Category</span>
+				<h2 class="section-ja">カテゴリから探す</h2>
+			</div>
 			<div class="category-grid">
-				{categoryStats.map((c) => (
-					<a href={`/category/${c.slug}/`} class="category-card">
-						<span class="category-emoji">{c.emoji}</span>
-						<span class="category-label">{c.label}</span>
-						<span class="category-count">{c.count}件</span>
-					</a>
-				))}
+				{categoryStats.map((c, i) => {
+					const cm = CATEGORIES[c.slug];
+					return (
+						<a href={`/category/${c.slug}/`} class="category-card">
+							<div
+								class={`category-blob blob-shape${(i % 4) + 1 === 1 ? '' : `-${(i % 4) + 1}`}`}
+								style={`background: ${c.blobColor};`}
+							>
+								{cm?.illustration ? (
+									<img class="category-illust" src={cm.illustration} alt="" loading="lazy" />
+								) : (
+									<span class="category-emoji">{c.emoji}</span>
+								)}
+							</div>
+							<span class="category-label">{c.label}</span>
+							<span class="category-en">{c.en}</span>
+							<span class="category-count">{c.count} posts</span>
+						</a>
+					);
+				})}
 			</div>
 		</section>
 
 		<!-- メイン2カラム -->
 		<div class="layout container">
 			<main>
-				<h2 class="section-title">新着記事</h2>
+				<div class="section-head">
+					<span class="section-en outline-text">New Post</span>
+					<h2 class="section-ja">新着記事</h2>
+				</div>
 				{latestPosts.length === 0 ? (
 					<p class="empty">まだ記事がありません。</p>
 				) : (
@@ -115,11 +151,18 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 										{post.data.heroImage ? (
 											<Image src={post.data.heroImage} alt="" width={400} height={250} />
 										) : (
-											<span class="article-thumb-emoji">{cat.emoji}</span>
+											<>
+												<div class="article-blob blob-shape-2" style={`background: ${cat.blobColor};`}></div>
+												{cat.illustration ? (
+													<img class="article-illust" src={cat.illustration} alt="" loading="lazy" />
+												) : (
+													<span class="article-thumb-emoji">{cat.emoji}</span>
+												)}
+											</>
 										)}
 									</div>
 									<div class="article-body">
-										<span class="article-category">{cat.label}</span>
+										<span class="article-category">{cat.en}</span>
 										<h3 class="article-title">{post.data.title}</h3>
 										<p class="article-date">
 											<FormattedDate date={post.data.pubDate} />
@@ -135,7 +178,10 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 			<aside class="sidebar">
 				<!-- プロフィール -->
 				<div class="profile-card">
-					<div class="profile-avatar">👩‍⚕️</div>
+					<div class="profile-avatar-wrap">
+						<div class="profile-blob blob-shape"></div>
+						<img class="profile-avatar-img" src={AVATAR_ILLUSTRATION} alt="こはるのアバター" loading="lazy" />
+					</div>
 					<h3 class="profile-name">{PROFILE.name}</h3>
 					<p class="profile-role">{PROFILE.role}</p>
 					<p class="profile-bio">{PROFILE.bio}</p>
@@ -147,17 +193,20 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 							</div>
 						))}
 					</div>
-					<a href="/about/" class="profile-btn">プロフィールを読む</a>
+					<a href="/about/" class="profile-btn">View Profile</a>
 				</div>
 
 				<!-- 編集部おすすめ記事（イチオシ3本と連動） -->
 				{popularPosts.length > 0 && (
 					<div class="side-section">
-						<h3 class="side-title">まずはこの記事から</h3>
+						<h3 class="side-title">
+							<span class="side-title-en">Pick up</span>
+							まずはこの記事から
+						</h3>
 						<ul class="popular-list">
 							{popularPosts.map((post, i) => (
 								<li>
-									<span class="popular-rank">{i + 1}</span>
+									<span class="popular-rank">{String(i + 1).padStart(2, '0')}</span>
 									<a href={`/blog/${post.id}/`}>{post.data.title}</a>
 								</li>
 							))}
@@ -167,12 +216,15 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 
 				<!-- カテゴリクイックリンク -->
 				<div class="side-section">
-					<h3 class="side-title">カテゴリから探す</h3>
+					<h3 class="side-title">
+						<span class="side-title-en">Category</span>
+						カテゴリから探す
+					</h3>
 					<ul class="side-category-list">
 						{categoryStats.filter((c) => c.count > 0).map((c) => (
 							<li>
 								<a href={`/category/${c.slug}/`}>
-									<span>{c.emoji}</span>
+									<span class="side-cat-emoji">{c.emoji}</span>
 									<span>{c.label}</span>
 									<span class="side-cat-count">{c.count}</span>
 								</a>
@@ -188,449 +240,567 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 </html>
 
 <style>
-	/* ヒーロー */
+	/* ============================
+	   ヒーローセクション
+	   ============================ */
 	.hero {
-		background: var(--bg-accent);
-		padding: 70px 24px 100px;
-		text-align: center;
+		background: var(--bg-main);
+		padding: 80px 0 100px;
 		position: relative;
 		overflow: hidden;
-		/* クラフト紙感を出すためのノイズ */
-		background-image:
-			url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.15 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
-			linear-gradient(180deg, #eaf0dc 0%, #f3ead6 100%);
-		background-repeat: repeat, no-repeat;
-	}
-	/* 下端をスカラップ（雲形）カットアウトでベースと接続 */
-	.hero::after {
-		content: '';
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: -1px;
-		height: 24px;
-		background-color: var(--bg-main);
-		-webkit-mask-image: radial-gradient(circle at 12px 0, var(--bg-main) 12px, transparent 13px);
-		mask-image: radial-gradient(circle at 12px 0, var(--bg-main) 12px, transparent 13px);
-		-webkit-mask-size: 24px 24px;
-		mask-size: 24px 24px;
-		-webkit-mask-repeat: repeat-x;
-		mask-repeat: repeat-x;
 	}
 	.hero-content {
-		position: relative;
-		z-index: 1;
-		max-width: 700px;
-		margin: 0 auto;
-	}
-	.hero h1 {
-		font-size: 34px;
-		color: var(--text-main);
-		margin-bottom: 16px;
-		letter-spacing: 0.02em;
-		font-family: var(--font-display);
-		font-weight: 600;
-	}
-	.hero p {
-		color: var(--text-sub);
-		font-size: 15px;
-		line-height: 2;
-	}
-	.hero-badge {
-		display: inline-flex;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 50px;
 		align-items: center;
-		gap: 10px;
-		background: transparent;
-		color: var(--forest-green);
-		padding: 6px 4px;
-		font-size: 13px;
-		font-weight: 700;
-		margin-bottom: 20px;
-		font-family: var(--font-display);
-		letter-spacing: 0.04em;
 	}
-	.hero-badge .bracket-l,
-	.hero-badge .bracket-r {
-		color: var(--ochre);
-		font-weight: 400;
-		transform: translateY(-1px);
+	.hero-kicker {
+		display: inline-block;
+		font-family: var(--font-display);
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: 0.3em;
+		text-transform: uppercase;
+		color: var(--accent);
+		margin-bottom: 22px;
+	}
+	.hero-title {
+		font-size: 32px;
+		font-weight: 500;
+		color: var(--ink-main);
+		line-height: 1.6;
+		letter-spacing: 0.02em;
+		margin-bottom: 24px;
+		font-family: var(--font-heading);
+	}
+	/* 1行目・2行目を強制改行。狭い画面では文字サイズ側で調整 */
+	.hero-title-line {
+		display: block;
+	}
+	.hero-title-em {
+		position: relative;
+		display: inline-block;
+		font-weight: 700;
+	}
+	.hero-title-em::after {
+		content: '';
+		position: absolute;
+		left: -4px;
+		right: -4px;
+		bottom: 4px;
+		height: 10px;
+		background: var(--blob-household);
+		z-index: -1;
+		opacity: 0.6;
+	}
+	.hero-lead {
+		color: var(--ink-sub);
+		font-size: 14px;
+		line-height: 2;
+		margin-bottom: 32px;
+	}
+	.hero-btn {
+		font-size: 12px;
+	}
+	/* ヒーロービジュアル：ブロブと大きなアウトライン英字 */
+	.hero-visual {
+		position: relative;
+		height: 380px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.hero-blob {
+		position: absolute;
+		border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+	}
+	.hero-blob-1 {
+		width: 260px;
+		height: 260px;
+		background: var(--blob-household);
+		top: 20px;
+		left: 40px;
+		opacity: 0.85;
+	}
+	.hero-blob-2 {
+		width: 180px;
+		height: 180px;
+		background: var(--blob-nisa);
+		bottom: 30px;
+		right: 30px;
+		border-radius: 42% 58% 46% 54% / 60% 40% 60% 40%;
+		opacity: 0.8;
+	}
+	.hero-blob-3 {
+		width: 120px;
+		height: 120px;
+		background: var(--blob-nurse);
+		top: 60px;
+		right: 70px;
+		border-radius: 56% 44% 70% 30% / 40% 60% 40% 60%;
+		opacity: 0.7;
+	}
+	.hero-outline {
+		position: relative;
+		font-family: var(--font-display);
+		font-size: 90px;
+		font-weight: 500;
+		letter-spacing: 0.1em;
+		-webkit-text-stroke: 1.5px var(--ink-main);
+		color: transparent;
+		z-index: 2;
 	}
 
-	/* イチオシ記事 */
-	.featured {
-		padding: 50px 24px 10px;
+	/* ============================
+	   セクション共通ヘッダー
+	   ============================ */
+	.section-head {
+		margin-bottom: 40px;
 	}
-	.featured-lead {
-		color: var(--text-sub);
-		font-size: 14px;
-		margin-bottom: 28px;
+	.section-en {
+		display: block;
+		font-size: 56px;
+		font-weight: 500;
+		margin-bottom: -18px;
+		letter-spacing: 0.08em;
+	}
+	.section-ja {
+		font-family: var(--font-heading);
+		font-size: 22px;
+		font-weight: 500;
+		color: var(--ink-main);
+		letter-spacing: 0.06em;
+		margin-bottom: 8px;
+	}
+	.section-lead {
+		color: var(--ink-sub);
+		font-size: 13px;
+		margin: 0;
+	}
+
+	/* ============================
+	   イチオシ記事
+	   ============================ */
+	.featured {
+		padding: 80px 24px 40px;
 	}
 	.featured-grid {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 20px;
+		gap: 28px;
 	}
 	.featured-card {
-		background: var(--bg-card);
-		border-radius: 20px;
-		overflow: hidden;
-		box-shadow: var(--shadow);
-		border: 1.5px solid var(--border);
-		transition: transform 0.3s, box-shadow 0.3s;
+		background: transparent;
+		transition: transform 0.3s;
 		display: block;
-		position: relative;
 		color: inherit;
 	}
 	.featured-card:hover {
-		transform: translateY(-5px);
-		box-shadow: var(--shadow-hover);
-	}
-	.featured-rank {
-		position: absolute;
-		top: 12px;
-		left: 12px;
-		background: var(--forest-green);
-		color: #fffbf3;
-		font-family: var(--font-display);
-		font-size: 12px;
-		font-weight: 700;
-		padding: 4px 12px;
-		border-radius: 100px;
-		z-index: 2;
-		letter-spacing: 0.05em;
+		transform: translateY(-6px);
 	}
 	.featured-thumb {
-		aspect-ratio: 16 / 9;
-		/* クラフト紙のような柔らかいセージ×クリームのグラデ */
-		background: linear-gradient(135deg, #eaf0dc, #f7e7ce);
+		aspect-ratio: 1 / 1;
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		position: relative;
+		margin-bottom: 18px;
 	}
-	/* ドット装飾（kumakoro風のあしらい） */
-	.featured-thumb::before {
-		content: '';
+	.featured-blob {
 		position: absolute;
-		inset: 0;
-		background-image: radial-gradient(circle at 20px 20px, rgba(58, 45, 31, 0.12) 1.5px, transparent 2px);
-		background-size: 22px 22px;
-		opacity: 0.5;
-		pointer-events: none;
+		inset: 8%;
+		transition: transform 0.4s ease;
+	}
+	.featured-card:hover .featured-blob {
+		transform: rotate(-4deg) scale(1.03);
 	}
 	.featured-emoji {
-		font-size: 56px;
+		font-size: 72px;
 		position: relative;
 		z-index: 1;
 	}
+	/* イチオシ記事用イラスト：ブロブと同じ形で重ねる */
+	.featured-illust {
+		position: absolute;
+		inset: 8%;
+		width: 84%;
+		height: 84%;
+		object-fit: cover;
+		border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+		z-index: 1;
+	}
+	.featured-rank {
+		position: absolute;
+		top: 0;
+		right: 0;
+		font-family: var(--font-display);
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--ink-main);
+		letter-spacing: 0.08em;
+		background: var(--bg-card);
+		padding: 6px 12px;
+		border-radius: 100px;
+		z-index: 2;
+	}
 	.featured-body {
-		padding: 18px 20px 22px;
+		padding: 0 4px;
 	}
 	.featured-category {
 		display: inline-block;
-		background: var(--bg-accent-warm);
-		color: var(--brown-warm);
-		font-size: 11px;
-		padding: 4px 10px;
-		border-radius: 100px;
+		font-family: var(--font-display);
+		font-size: 10px;
 		font-weight: 700;
+		letter-spacing: 0.2em;
+		color: var(--accent);
 		margin-bottom: 10px;
 	}
 	.featured-title {
-		font-size: 15px;
-		font-weight: 700;
-		color: var(--text-main);
-		line-height: 1.5;
+		font-family: var(--font-heading);
+		font-size: 16px;
+		font-weight: 500;
+		color: var(--ink-main);
+		line-height: 1.7;
+		letter-spacing: 0.03em;
 	}
 
-	/* カテゴリから探す */
+	/* ============================
+	   カテゴリから探す
+	   ============================ */
 	.categories {
-		padding: 50px 24px 10px;
+		padding: 80px 24px 40px;
 	}
 	.category-grid {
 		display: grid;
 		grid-template-columns: repeat(7, 1fr);
-		gap: 12px;
+		gap: 18px;
 	}
 	.category-card {
-		background: var(--bg-card);
-		border-radius: 14px;
-		padding: 18px 8px;
 		text-align: center;
-		box-shadow: var(--shadow);
-		border: 1px solid var(--border);
-		transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-		color: var(--text-main);
+		color: var(--ink-main);
+		transition: transform 0.3s;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 	.category-card:hover {
-		transform: translateY(-3px);
-		box-shadow: var(--shadow-hover);
-		background: var(--bg-accent);
-	}
-	.category-emoji {
-		display: block;
-		font-size: 28px;
-		margin-bottom: 6px;
-	}
-	.category-label {
-		display: block;
-		font-size: 12px;
-		font-weight: 700;
-		margin-bottom: 2px;
-	}
-	.category-count {
-		display: block;
-		font-size: 10px;
-		color: var(--pink-deep);
-	}
-
-	/* レイアウト */
-	.layout {
-		padding: 60px 24px;
-		display: grid;
-		grid-template-columns: 1fr 300px;
-		gap: 50px;
-	}
-
-	/* セクションタイトル：雑誌風セリフ太字 + クレヨン風のラフな下線 */
-	.section-title {
-		font-size: 26px;
-		color: var(--text-main);
-		margin-bottom: 28px;
-		padding-bottom: 10px;
-		display: inline-block;
-		font-family: var(--font-heading);
-		font-weight: 900;
-		position: relative;
-		letter-spacing: 0.02em;
-	}
-	.section-title::after {
-		/* クレヨンっぽくかすれた下線（左が濃く、右が細く流れる） */
-		content: '';
-		position: absolute;
-		left: 0;
-		right: 12px;
-		bottom: 0;
-		height: 8px;
-		background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 Q 40 3 80 4 T 160 4.5 T 245 3' fill='none' stroke='%233a2d1f' stroke-width='3' stroke-linecap='round' opacity='0.85'/%3E%3Cpath d='M4 6 Q 50 5 100 5.5 T 200 5.5 T 250 5' fill='none' stroke='%233a2d1f' stroke-width='1.2' stroke-linecap='round' opacity='0.35'/%3E%3C/svg%3E");
-		background-repeat: no-repeat;
-		background-size: 100% 100%;
-	}
-
-	/* 記事カードグリッド */
-	.articles-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 24px;
-	}
-	.article-card {
-		background: var(--bg-card);
-		border-radius: 16px;
-		overflow: hidden;
-		box-shadow: var(--shadow);
-		transition: transform 0.3s, box-shadow 0.3s;
-		display: block;
-		color: inherit;
-	}
-	.article-card:hover {
 		transform: translateY(-4px);
-		box-shadow: var(--shadow-hover);
 	}
-	.article-thumb {
-		aspect-ratio: 16 / 10;
-		background: linear-gradient(135deg, #eaf0dc, #f7e7ce);
+	.category-card:hover .category-blob {
+		transform: rotate(-6deg);
+	}
+	.category-blob {
+		width: 100%;
+		aspect-ratio: 1 / 1;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		margin-bottom: 12px;
+		transition: transform 0.4s ease;
+	}
+	.category-emoji {
+		font-size: 32px;
+	}
+	/* カテゴリ用イラスト：親ブロブと同じ形で全面覆い */
+	.category-illust {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: inherit;
+	}
+	.category-blob {
+		position: relative;
+		overflow: hidden;
+	}
+	.category-label {
+		font-family: var(--font-heading);
+		font-size: 13px;
+		font-weight: 500;
+		letter-spacing: 0.05em;
+		margin-bottom: 2px;
+	}
+	.category-en {
+		font-family: var(--font-display);
+		font-size: 9px;
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		color: var(--accent);
+		margin-bottom: 2px;
+	}
+	.category-count {
+		font-family: var(--font-display);
+		font-size: 10px;
+		color: var(--ink-light);
+	}
+
+	/* ============================
+	   レイアウト（新着 + サイドバー）
+	   ============================ */
+	.layout {
+		padding: 80px 24px;
+		display: grid;
+		grid-template-columns: 1fr 300px;
+		gap: 60px;
+	}
+
+	/* ============================
+	   記事カードグリッド
+	   ============================ */
+	.articles-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 36px 28px;
+	}
+	.article-card {
+		display: block;
+		color: inherit;
+		transition: transform 0.3s;
+	}
+	.article-card:hover {
+		transform: translateY(-4px);
+	}
+	.article-card:hover .article-blob {
+		transform: rotate(-3deg) scale(1.02);
+	}
+	.article-thumb {
+		aspect-ratio: 4 / 3;
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 16px;
 		overflow: hidden;
 	}
 	.article-thumb :global(img) {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		border-radius: 0;
+		border-radius: 20px;
+	}
+	.article-blob {
+		position: absolute;
+		inset: 6%;
+		transition: transform 0.4s ease;
+		opacity: 0.9;
 	}
 	.article-thumb-emoji {
-		font-size: 48px;
-		color: var(--pink-main);
+		font-size: 56px;
+		position: relative;
+		z-index: 1;
+	}
+	/* 新着記事用イラスト：ブロブと同じ形で重ねる */
+	.article-illust {
+		position: absolute;
+		inset: 6%;
+		width: 88%;
+		height: 88%;
+		object-fit: cover;
+		border-radius: 42% 58% 46% 54% / 60% 40% 60% 40%;
+		z-index: 1;
 	}
 	.article-body {
-		padding: 20px;
+		padding: 0 4px;
 	}
 	.article-category {
 		display: inline-block;
-		background: var(--bg-accent);
-		color: var(--pink-deep);
-		font-size: 11px;
-		padding: 4px 10px;
-		border-radius: 100px;
+		font-family: var(--font-display);
+		font-size: 10px;
 		font-weight: 700;
-		margin-bottom: 10px;
+		letter-spacing: 0.2em;
+		color: var(--accent);
+		margin-bottom: 8px;
 	}
 	.article-title {
-		font-size: 16px;
-		font-weight: 700;
-		color: var(--text-main);
-		line-height: 1.5;
-		margin-bottom: 10px;
+		font-family: var(--font-heading);
+		font-size: 15px;
+		font-weight: 500;
+		color: var(--ink-main);
+		line-height: 1.7;
+		margin-bottom: 8px;
 	}
 	.article-date {
-		font-size: 12px;
-		color: var(--text-sub);
+		font-family: var(--font-display);
+		font-size: 11px;
+		color: var(--ink-light);
+		letter-spacing: 0.08em;
 		margin: 0;
 	}
 	.empty {
-		color: var(--text-sub);
+		color: var(--ink-sub);
 		padding: 40px 0;
 	}
 
-	/* サイドバー */
+	/* ============================
+	   サイドバー
+	   ============================ */
 	.sidebar {
 		display: flex;
 		flex-direction: column;
-		gap: 30px;
+		gap: 40px;
 	}
 	.profile-card {
-		background: var(--bg-card);
-		border-radius: 20px;
-		padding: 30px 24px;
 		text-align: center;
-		box-shadow: var(--shadow);
-		border: 1px solid var(--border);
 	}
-	.profile-avatar {
-		width: 110px;
-		height: 110px;
-		border-radius: 50%;
-		background: linear-gradient(135deg, #f7e7ce, #e8a97d);
-		margin: 0 auto 16px;
+	.profile-avatar-wrap {
+		position: relative;
+		width: 150px;
+		height: 150px;
+		margin: 0 auto 20px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 48px;
-		border: 4px solid white;
-		box-shadow: var(--shadow);
+	}
+	.profile-blob {
+		position: absolute;
+		inset: 0;
+		background: var(--blob-nurse);
+	}
+	.profile-avatar {
+		position: relative;
+		z-index: 1;
+		font-size: 56px;
+	}
+	/* プロフィール用イラストアバター：ブロブと一体化 */
+	.profile-avatar-img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+		z-index: 1;
 	}
 	.profile-name {
-		font-size: 18px;
-		font-weight: 700;
-		color: var(--text-main);
+		font-family: var(--font-heading);
+		font-size: 20px;
+		font-weight: 500;
+		color: var(--ink-main);
+		letter-spacing: 0.06em;
 		margin-bottom: 4px;
 	}
 	.profile-role {
-		font-size: 12px;
-		color: var(--pink-deep);
+		font-family: var(--font-display);
+		font-size: 10px;
 		font-weight: 700;
-		letter-spacing: 0.05em;
-		margin-bottom: 16px;
+		letter-spacing: 0.3em;
+		color: var(--accent);
+		margin-bottom: 18px;
 	}
 	.profile-bio {
-		font-size: 13px;
-		color: var(--text-sub);
-		line-height: 1.8;
+		font-size: 12px;
+		color: var(--ink-sub);
+		line-height: 2;
 		text-align: left;
-		margin-bottom: 20px;
+		margin-bottom: 22px;
 	}
 	.profile-stats {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 8px;
-		padding: 16px 0;
-		border-top: 1px dashed var(--border);
-		border-bottom: 1px dashed var(--border);
-		margin-bottom: 20px;
+		padding: 20px 0;
+		border-top: 1px solid var(--border);
+		border-bottom: 1px solid var(--border);
+		margin-bottom: 22px;
 	}
 	.stat-item {
 		text-align: center;
 	}
 	.stat-value {
-		font-size: 16px;
-		font-weight: 700;
-		color: var(--pink-deep);
 		font-family: var(--font-heading);
+		font-size: 18px;
+		font-weight: 700;
+		color: var(--ink-main);
 	}
 	.stat-label {
-		font-size: 10px;
-		color: var(--text-sub);
-		margin-top: 2px;
+		font-family: var(--font-display);
+		font-size: 9px;
+		letter-spacing: 0.2em;
+		color: var(--ink-sub);
+		margin-top: 4px;
+		text-transform: uppercase;
 	}
 	.profile-btn {
 		display: block;
-		background: var(--pink-main);
-		color: white;
-		padding: 12px;
-		border-radius: 100px;
-		font-size: 13px;
-		font-weight: 700;
+		background: var(--ink-main);
+		color: var(--bg-main);
+		padding: 14px;
+		font-family: var(--font-display);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
 		transition: background 0.2s;
 	}
 	.profile-btn:hover {
-		background: var(--pink-deep);
+		background: var(--accent-deep);
 	}
 
 	.side-section {
-		background: var(--bg-card);
-		border-radius: 20px;
-		padding: 24px;
-		box-shadow: var(--shadow);
-		border: 1px solid var(--border);
+		/* カード装飾は外し、線の区切りだけに */
 	}
 	.side-title {
+		font-family: var(--font-heading);
 		font-size: 15px;
-		color: var(--text-main);
-		margin-bottom: 16px;
-		padding-bottom: 8px;
-		border-bottom: 2px solid var(--pink-main);
-		font-weight: 700;
+		font-weight: 500;
+		color: var(--ink-main);
+		margin-bottom: 18px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid var(--ink-main);
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		letter-spacing: 0.05em;
+	}
+	.side-title-en {
+		font-family: var(--font-display);
+		font-size: 10px;
+		font-weight: 500;
+		letter-spacing: 0.3em;
+		color: var(--accent);
+		text-transform: uppercase;
 	}
 	.popular-list {
 		list-style: none;
 	}
 	.popular-list li {
-		padding: 10px 0;
-		border-bottom: 1px dashed var(--border);
+		padding: 14px 0;
+		border-bottom: 1px solid var(--border);
 		font-size: 13px;
-		line-height: 1.5;
+		line-height: 1.7;
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
 	}
 	.popular-list li:last-child {
 		border-bottom: none;
 	}
-	.popular-list li {
-		display: flex;
-		align-items: flex-start;
-		gap: 10px;
-	}
 	.popular-rank {
-		background: var(--pink-deep);
-		color: white;
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		font-size: 11px;
+		font-family: var(--font-display);
+		font-size: 13px;
 		font-weight: 700;
+		color: var(--accent);
 		flex-shrink: 0;
-		margin-top: 2px;
+		min-width: 20px;
 	}
 	.popular-list a {
-		color: var(--text-main);
+		color: var(--ink-main);
 		transition: color 0.2s;
 		flex: 1;
 	}
 	.popular-list a:hover {
-		color: var(--pink-deep);
+		color: var(--accent);
 	}
 
-	/* サイドバー：カテゴリリスト */
 	.side-category-list {
 		list-style: none;
 		padding: 0;
 		margin: 0;
 	}
 	.side-category-list li {
-		border-bottom: 1px dashed var(--border);
+		border-bottom: 1px solid var(--border);
 	}
 	.side-category-list li:last-child {
 		border-bottom: none;
@@ -638,64 +808,103 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 	.side-category-list a {
 		display: flex;
 		align-items: center;
-		gap: 10px;
-		padding: 10px 4px;
-		color: var(--text-main);
+		gap: 12px;
+		padding: 12px 4px;
+		color: var(--ink-main);
 		font-size: 13px;
 		transition: color 0.2s;
 	}
 	.side-category-list a:hover {
-		color: var(--pink-deep);
+		color: var(--accent);
+	}
+	.side-cat-emoji {
+		font-size: 16px;
 	}
 	.side-cat-count {
 		margin-left: auto;
+		font-family: var(--font-display);
 		font-size: 11px;
-		color: var(--pink-deep);
-		background: var(--bg-accent);
-		padding: 2px 8px;
-		border-radius: 100px;
-		font-weight: 700;
+		color: var(--ink-light);
 	}
 
-	/* スマホ対応 */
+	/* ============================
+	   スマホ対応
+	   ============================ */
+	@media (max-width: 1050px) {
+		.hero-title {
+			font-size: 26px;
+		}
+		.hero-outline {
+			font-size: 70px;
+		}
+	}
 	@media (max-width: 768px) {
-		.layout {
+		.hero {
+			padding: 60px 0 70px;
+		}
+		.hero-content {
 			grid-template-columns: 1fr;
 			gap: 40px;
-			padding: 40px 16px;
 		}
-		.articles-grid {
-			grid-template-columns: 1fr;
+		.hero-visual {
+			height: 260px;
+			order: -1;
 		}
-		.hero h1 {
+		.hero-blob-1 {
+			width: 180px;
+			height: 180px;
+		}
+		.hero-blob-2 {
+			width: 120px;
+			height: 120px;
+		}
+		.hero-blob-3 {
+			width: 80px;
+			height: 80px;
+		}
+		.hero-outline {
+			font-size: 60px;
+		}
+		.hero-title {
 			font-size: 24px;
 		}
-		.hero {
-			padding: 50px 16px 60px;
+		.section-en {
+			font-size: 40px;
+			margin-bottom: -12px;
 		}
-		/* カテゴリグリッドをスマホで2列×4段（8番目は空白）に */
-		.category-grid {
-			grid-template-columns: repeat(4, 1fr);
-			gap: 8px;
-		}
-		/* イチオシはスマホで1カラム */
-		.featured-grid {
-			grid-template-columns: 1fr;
-			gap: 16px;
+		.section-ja {
+			font-size: 18px;
 		}
 		.featured {
-			padding: 40px 16px 0;
+			padding: 60px 16px 20px;
+		}
+		.featured-grid {
+			grid-template-columns: 1fr;
+			gap: 32px;
+		}
+		.categories {
+			padding: 60px 16px 20px;
+		}
+		.category-grid {
+			grid-template-columns: repeat(4, 1fr);
+			gap: 14px;
 		}
 		.category-emoji {
 			font-size: 24px;
 		}
-		.categories {
-			padding: 40px 16px 0;
+		.layout {
+			grid-template-columns: 1fr;
+			gap: 50px;
+			padding: 60px 16px;
+		}
+		.articles-grid {
+			grid-template-columns: 1fr;
+			gap: 32px;
 		}
 	}
 	@media (max-width: 480px) {
 		.category-grid {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 </style>

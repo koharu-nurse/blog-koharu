@@ -1,13 +1,16 @@
 ---
-// サイトヘッダー（ロゴ＋ナビゲーション）
+// サイトヘッダー（STEEN風：スタンプ風ロゴ＋太めサンセリフ英字ナビ）
 import { SITE_TITLE_SHORT, SITE_TAGLINE, NAV_ITEMS } from '../consts';
 ---
 
 <header class="header">
 	<div class="header-inner container">
-		<a href="/" class="site-title">
-			🌷 {SITE_TITLE_SHORT}
-			<span>{SITE_TAGLINE}</span>
+		<a href="/" class="site-title" aria-label={SITE_TITLE_SHORT}>
+			<span class="site-logo-mark" aria-hidden="true">K</span>
+			<span class="site-logo-text">
+				<span class="site-logo-jp">{SITE_TITLE_SHORT}</span>
+				<span class="site-logo-en">Koharu Nurse · {SITE_TAGLINE}</span>
+			</span>
 		</a>
 		<nav class="nav" aria-label="メインナビゲーション">
 			{NAV_ITEMS.map((item) => (
@@ -19,9 +22,9 @@ import { SITE_TITLE_SHORT, SITE_TAGLINE, NAV_ITEMS } from '../consts';
 
 <style>
 	.header {
-		background: var(--bg-card);
+		background: var(--bg-main);
 		border-bottom: 1px solid var(--border);
-		padding: 18px 0;
+		padding: 20px 0;
 		position: sticky;
 		top: 0;
 		z-index: 100;
@@ -30,49 +33,105 @@ import { SITE_TITLE_SHORT, SITE_TAGLINE, NAV_ITEMS } from '../consts';
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		gap: 24px;
 	}
+
+	/* スタンプ風ロゴ：ブロブ背景+イニシャル+テキスト */
 	.site-title {
-		font-size: 20px;
-		color: var(--brown-warm);
-		font-weight: 600;
-		font-family: var(--font-display);
+		display: inline-flex;
+		align-items: center;
+		gap: 12px;
+		line-height: 1.1;
+	}
+	.site-logo-mark {
+		width: 42px;
+		height: 42px;
+		background: var(--ink-main);
+		color: var(--bg-main);
+		font-family: var(--font-heading);
+		font-size: 22px;
+		font-weight: 700;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+		position: relative;
+		overflow: hidden;
+		letter-spacing: 0.02em;
+	}
+	/* スタンプのザラザラ感：ノイズを文字の上に重ねる */
+	.site-logo-mark::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='s'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93  0 0 0 0 0.89  0 0 0 0 0.82  0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23s)'/%3E%3C/svg%3E");
+		mix-blend-mode: lighten;
+		pointer-events: none;
+	}
+	.site-logo-text {
 		display: inline-flex;
 		flex-direction: column;
-		line-height: 1.2;
 		gap: 2px;
 	}
-	.site-title span {
-		font-size: 12px;
-		color: var(--text-sub);
+	.site-logo-jp {
+		font-family: var(--font-heading);
+		font-size: 17px;
 		font-weight: 500;
-		margin-left: 0;
-		font-family: var(--font-body);
+		color: var(--ink-main);
+		letter-spacing: 0.06em;
 	}
+	.site-logo-en {
+		font-family: var(--font-display);
+		font-size: 9px;
+		font-weight: 500;
+		letter-spacing: 0.2em;
+		color: var(--accent);
+		text-transform: uppercase;
+	}
+
+	/* ナビ：太めサンセリフ英字風の日本語（letter-spacing広め） */
 	.nav {
 		display: flex;
-		gap: 20px;
+		gap: 22px;
 		align-items: center;
 	}
 	.nav a {
-		font-size: 14px;
-		color: var(--text-sub);
+		font-family: var(--font-heading);
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--ink-main);
+		letter-spacing: 0.1em;
 		transition: color 0.2s;
 		white-space: nowrap;
+		position: relative;
 	}
-	.nav a:hover {
-		color: var(--pink-deep);
+	.nav a::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -6px;
+		height: 1px;
+		background: var(--ink-main);
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.3s ease;
+	}
+	.nav a:hover::after {
+		transform: scaleX(1);
 	}
 
 	/* 中間サイズ（タブレット〜小型ノートPC）でナビをコンパクトに */
 	@media (max-width: 1050px) {
 		.nav {
-			gap: 14px;
+			gap: 16px;
 		}
 		.nav a {
-			font-size: 13px;
+			font-size: 12px;
+			letter-spacing: 0.08em;
 		}
-		.site-title {
-			font-size: 17px;
+		.site-logo-jp {
+			font-size: 15px;
 		}
 	}
 
@@ -80,10 +139,15 @@ import { SITE_TITLE_SHORT, SITE_TAGLINE, NAV_ITEMS } from '../consts';
 		.nav {
 			display: none;
 		}
-		.site-title {
-			font-size: 17px;
+		.site-logo-mark {
+			width: 36px;
+			height: 36px;
+			font-size: 18px;
 		}
-		.site-title span {
+		.site-logo-jp {
+			font-size: 14px;
+		}
+		.site-logo-en {
 			display: none;
 		}
 	}
