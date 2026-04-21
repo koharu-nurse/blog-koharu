@@ -18,12 +18,12 @@ export default defineConfig({
 			subsets: ['japanese', 'latin'],
 		},
 		{
-			// 本文中の見出し用：丸ゴシックで柔らかく
+			// 見出し用：太めのセリフでエディトリアル雑誌風の印象に
 			provider: fontProviders.google(),
-			name: 'Zen Maru Gothic',
+			name: 'Noto Serif JP',
 			cssVariable: '--font-heading',
-			fallbacks: ['sans-serif'],
-			weights: [500, 700],
+			fallbacks: ['serif'],
+			weights: [700, 900],
 			styles: ['normal'],
 			subsets: ['japanese', 'latin'],
 		},

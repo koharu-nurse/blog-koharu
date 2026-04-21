@@ -46,7 +46,11 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 		<!-- ヒーロー -->
 		<section class="hero">
 			<div class="hero-content">
-				<span class="hero-badge">看護師ママが発信中</span>
+				<span class="hero-badge">
+					<span class="bracket-l" aria-hidden="true">＼</span>
+					看護師ママが発信中
+					<span class="bracket-r" aria-hidden="true">／</span>
+				</span>
 				<h1>ゆっくり、じぶんのペースで<br />お金と暮らしを整える</h1>
 				<p>
 					3児のママで現役看護師のこはるが、<br />
@@ -186,31 +190,32 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 <style>
 	/* ヒーロー */
 	.hero {
-		background: linear-gradient(135deg, #faf0ec 0%, #f3e5e1 100%);
-		padding: 70px 24px 80px;
+		background: var(--bg-accent);
+		padding: 70px 24px 100px;
 		text-align: center;
 		position: relative;
 		overflow: hidden;
+		/* クラフト紙感を出すためのノイズ */
+		background-image:
+			url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.15 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"),
+			linear-gradient(180deg, #eaf0dc 0%, #f3ead6 100%);
+		background-repeat: repeat, no-repeat;
 	}
-	.hero::before {
-		content: '';
-		position: absolute;
-		width: 300px;
-		height: 300px;
-		background: radial-gradient(circle, rgba(212, 165, 165, 0.2), transparent 70%);
-		top: -100px;
-		left: -100px;
-		border-radius: 50%;
-	}
+	/* 下端をスカラップ（雲形）カットアウトでベースと接続 */
 	.hero::after {
 		content: '';
 		position: absolute;
-		width: 400px;
-		height: 400px;
-		background: radial-gradient(circle, rgba(255, 255, 255, 0.6), transparent 70%);
-		bottom: -150px;
-		right: -150px;
-		border-radius: 50%;
+		left: 0;
+		right: 0;
+		bottom: -1px;
+		height: 24px;
+		background-color: var(--bg-main);
+		-webkit-mask-image: radial-gradient(circle at 12px 0, var(--bg-main) 12px, transparent 13px);
+		mask-image: radial-gradient(circle at 12px 0, var(--bg-main) 12px, transparent 13px);
+		-webkit-mask-size: 24px 24px;
+		mask-size: 24px 24px;
+		-webkit-mask-repeat: repeat-x;
+		mask-repeat: repeat-x;
 	}
 	.hero-content {
 		position: relative;
@@ -232,16 +237,23 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 		line-height: 2;
 	}
 	.hero-badge {
-		display: inline-block;
-		background: white;
-		color: var(--brown-warm);
-		padding: 6px 16px;
-		border-radius: 100px;
-		font-size: 12px;
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		background: transparent;
+		color: var(--forest-green);
+		padding: 6px 4px;
+		font-size: 13px;
 		font-weight: 700;
 		margin-bottom: 20px;
-		box-shadow: var(--shadow);
 		font-family: var(--font-display);
+		letter-spacing: 0.04em;
+	}
+	.hero-badge .bracket-l,
+	.hero-badge .bracket-r {
+		color: var(--ochre);
+		font-weight: 400;
+		transform: translateY(-1px);
 	}
 
 	/* イチオシ記事 */
@@ -365,29 +377,27 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 		gap: 50px;
 	}
 
-	/* セクションタイトル：手書き風の下線で温かみを出す */
+	/* セクションタイトル：雑誌風セリフ太字 + クレヨン風のラフな下線 */
 	.section-title {
-		font-size: 24px;
+		font-size: 26px;
 		color: var(--text-main);
 		margin-bottom: 28px;
-		padding-bottom: 12px;
+		padding-bottom: 10px;
 		display: inline-block;
-		font-family: var(--font-display);
-		font-weight: 600;
+		font-family: var(--font-heading);
+		font-weight: 900;
 		position: relative;
-	}
-	.section-title::before {
-		content: '🌷 ';
+		letter-spacing: 0.02em;
 	}
 	.section-title::after {
-		/* ちょっと揺れた手描き風の下線 */
+		/* クレヨンっぽくかすれた下線（左が濃く、右が細く流れる） */
 		content: '';
 		position: absolute;
 		left: 0;
-		right: 8px;
-		bottom: 4px;
-		height: 6px;
-		background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 6' preserveAspectRatio='none'%3E%3Cpath d='M0 3 Q 25 0, 50 3 T 100 3 T 150 3 T 200 3' fill='none' stroke='%23d4a5a5' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+		right: 12px;
+		bottom: 0;
+		height: 8px;
+		background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 260 8' preserveAspectRatio='none'%3E%3Cpath d='M2 5 Q 40 3 80 4 T 160 4.5 T 245 3' fill='none' stroke='%233a2d1f' stroke-width='3' stroke-linecap='round' opacity='0.85'/%3E%3Cpath d='M4 6 Q 50 5 100 5.5 T 200 5.5 T 250 5' fill='none' stroke='%233a2d1f' stroke-width='1.2' stroke-linecap='round' opacity='0.35'/%3E%3C/svg%3E");
 		background-repeat: no-repeat;
 		background-size: 100% 100%;
 	}

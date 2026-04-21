@@ -5,24 +5,31 @@
 */
 
 :root {
-	--bg-main: #faf6f0;          /* 背景：やわらかいベージュ */
-	--bg-card: #ffffff;          /* カード背景：白 */
-	--bg-accent: #f3e5e1;        /* アクセント：くすみピンクのベース */
-	--bg-accent-warm: #f7ead8;   /* アクセント：ウォームピーチベージュ */
-	--bg-accent-cool: #e2ebef;   /* アクセント：ダスティブルー */
-	--pink-main: #d4a5a5;        /* メインピンク */
-	--pink-deep: #b8878a;        /* 濃いめピンク（ホバー用） */
-	--peach: #e8b495;            /* ウォームピーチ（アクセント強調用） */
-	--brown-warm: #9c7e66;       /* ウォームブラウン（強調テキスト用） */
-	--text-main: #4a3f3a;        /* 本文：温かみのあるこげ茶 */
-	--text-sub: #8b7d76;         /* 補助：グレージュ */
-	--border: #ebe1d8;           /* 区切り線 */
-	--shadow: 0 4px 20px rgba(180, 140, 130, 0.08);
-	--shadow-hover: 0 8px 30px rgba(180, 140, 130, 0.15);
+	/* kumakoro 参考のクラフト紙風パレット：クリーム×濃緑×テラコッタ×黄土色 */
+	--bg-main: #f5efe2;          /* 背景：クリーム色の紙 */
+	--bg-card: #fffbf3;          /* カード背景：少し明るい白 */
+	--bg-accent: #eaf0dc;        /* アクセント：やわらかい緑 */
+	--bg-accent-warm: #f7e7ce;   /* アクセント：温かいベージュ */
+	--bg-accent-cool: #e6e9d8;   /* アクセント：セージ */
+	--forest-green: #5a7042;     /* 濃緑（メインアクセント） */
+	--moss-green: #8ba868;       /* やわらかい緑 */
+	--terracotta: #c97b5a;       /* テラコッタ */
+	--ochre: #d9a94a;            /* 黄土色 */
+	--cream-deep: #d9bf8a;       /* アクセント用クラフト色 */
+	/* 互換のための旧変数。既存コード修正を減らすため段階的に置換 */
+	--pink-main: #c97b5a;        /* 旧pink-mainはテラコッタに再マップ */
+	--pink-deep: #a65e3f;        /* 旧pink-deepは濃いテラコッタに */
+	--peach: #e8a97d;            /* ウォームピーチ */
+	--brown-warm: #7a5e3f;       /* ウォームブラウン */
+	--text-main: #3a2d1f;        /* 本文：深い茶色 */
+	--text-sub: #7a6854;         /* 補助：セピア */
+	--border: #d9cfbb;           /* 区切り線 */
+	--shadow: 0 4px 20px rgba(90, 70, 50, 0.08);
+	--shadow-hover: 0 8px 30px rgba(90, 70, 50, 0.15);
 
 	--font-body: 'Noto Sans JP', sans-serif;
-	--font-heading: 'Zen Maru Gothic', sans-serif;
-	--font-display: 'Klee One', 'Zen Maru Gothic', serif;
+	--font-heading: 'Noto Serif JP', serif;
+	--font-display: 'Klee One', 'Noto Serif JP', serif;
 
 	--container-max: 1100px;
 	--container-pad: 24px;
