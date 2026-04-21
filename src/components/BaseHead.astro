@@ -36,10 +36,17 @@ const {
 	updatedDate,
 	category,
 } = Astro.props;
-// 記事にheroImageがない場合のフォールバックOGP画像（SNSシェア時の見栄え確保）
+// 記事ページ：heroImage > 動的OG画像(/og/<slug>.svg) > デフォルト
+// それ以外のページ：heroImage > デフォルト
+const articleSlug =
+	schemaType === 'article'
+		? canonicalURL.pathname.replace(/^\/blog\//, '').replace(/\/$/, '')
+		: null;
 const ogImageURL = image
 	? new URL(image.src, Astro.url)
-	: new URL('/og-default.svg', Astro.site);
+	: articleSlug
+		? new URL(`/og/${articleSlug}.svg`, Astro.site)
+		: new URL('/og-default.svg', Astro.site);
 
 // JSON-LD 構造化データ（Googleが記事情報を読みやすくするためのもの）
 const siteOrigin = Astro.site?.origin ?? '';

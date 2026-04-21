@@ -36,6 +36,7 @@ export const NAV_ITEMS = [
 	{ label: '看護師の経験', href: '/category/nurse/' },
 	{ label: '子育て', href: '/category/parenting/' },
 	{ label: 'プロフィール', href: '/about/' },
+	{ label: '🔍 検索', href: '/search/' },
 ];
 
 // カテゴリ → 表示名・絵文字

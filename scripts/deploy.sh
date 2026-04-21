@@ -29,11 +29,17 @@ echo "🛠  ビルドを実行..."
 npx astro build
 
 echo ""
+echo "🔎 Pagefind（サイト内検索）インデックスを生成..."
+npx pagefind --site dist
+
+echo ""
 echo "🚀 Cloudflare Pages にデプロイ..."
+# コミットメッセージに日本語/絵文字が含まれるとCloudflare側でUTF-8エラーになるため英語固定
 npx wrangler pages deploy dist \
 	--project-name=blog-koharu \
 	--branch=main \
-	--commit-dirty=true
+	--commit-dirty=true \
+	--commit-message="deploy"
 
 echo ""
 echo "✅ デプロイ完了！"

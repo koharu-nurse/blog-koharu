@@ -1,0 +1,81 @@
+---
+// サイト内検索ページ。Pagefindの公式UIを読み込むだけで即動作する
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+
+const pageTitle = `記事を検索 | ${SITE_TITLE}`;
+const pageDesc = 'こはるの家計管理ブログの記事をキーワードで検索できます。';
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<BaseHead title={pageTitle} description={pageDesc} />
+		<!-- Pagefindのスタイル。ビルド後にdist/pagefind/に配置される -->
+		<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+	</head>
+	<body>
+		<Header />
+		<main class="container">
+			<h1 class="page-title">🔍 記事を検索</h1>
+			<p class="page-lead">キーワードで記事を探せます。タイトル・本文の両方から検索します🌷</p>
+			<div id="search"></div>
+		</main>
+		<Footer />
+		<!-- Pagefindの検索UIスクリプト。ビルド後にdist/pagefind/に配置される -->
+		<script is:inline src="/pagefind/pagefind-ui.js"></script>
+		<script is:inline>
+			window.addEventListener('DOMContentLoaded', () => {
+				new PagefindUI({
+					element: '#search',
+					showSubResults: true,
+					translations: {
+						placeholder: 'キーワードで探す…',
+						clear_search: 'クリア',
+						load_more: 'もっと見る',
+						search_label: '記事を検索',
+						filters_label: '絞り込み',
+						zero_results: '[SEARCH_TERM] の記事は見つかりませんでした。',
+						many_results: '[COUNT] 件の結果：[SEARCH_TERM]',
+						one_result: '1 件の結果：[SEARCH_TERM]',
+						alt_search: '[SEARCH_TERM] の結果は見つかりませんでした。[DIFFERENT_TERM] で検索します',
+						search_suggestion: '[SEARCH_TERM] の結果は見つかりませんでした。別のキーワードをお試しください：',
+						searching: '[SEARCH_TERM] を検索中…',
+					},
+				});
+			});
+		</script>
+	</body>
+</html>
+
+<style>
+	main {
+		padding: 50px 24px 60px;
+		min-height: 60vh;
+	}
+	.page-title {
+		font-size: 26px;
+		margin-bottom: 8px;
+		text-align: center;
+	}
+	.page-lead {
+		color: var(--text-sub);
+		font-size: 14px;
+		text-align: center;
+		margin-bottom: 32px;
+	}
+	/* PagefindUIのカラーをサイトに合わせる */
+	#search {
+		--pagefind-ui-primary: var(--pink-deep);
+		--pagefind-ui-text: var(--text-main);
+		--pagefind-ui-background: var(--bg-card);
+		--pagefind-ui-border: var(--border);
+		--pagefind-ui-tag: var(--bg-accent);
+		--pagefind-ui-border-radius: 12px;
+		--pagefind-ui-font: inherit;
+		max-width: 760px;
+		margin: 0 auto;
+	}
+</style>

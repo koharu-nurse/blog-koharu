@@ -1,0 +1,120 @@
+---
+// 記事末尾に表示するSNSシェアボタン
+// X（Twitter）・Facebook・LINE・URLコピー
+// トラッキングは発生しないシンプルなリンク方式（追加JS最小）
+
+type Props = {
+	title: string;
+	url: string; // 絶対URL推奨
+};
+
+const { title, url } = Astro.props;
+
+const encodedTitle = encodeURIComponent(title);
+const encodedUrl = encodeURIComponent(url);
+
+const xHref = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+const facebookHref = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+const lineHref = `https://social-plugins.line.me/lineit/share?url=${encodedUrl}`;
+const hatebuHref = `https://b.hatena.ne.jp/entry/${url.replace(/^https?:\/\//, '')}`;
+---
+
+<div class="share">
+	<p class="share-label">この記事をシェア🌷</p>
+	<ul class="share-list">
+		<li>
+			<a href={xHref} target="_blank" rel="noopener noreferrer" class="share-btn x" aria-label="Xでシェア">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+					<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+				</svg>
+				<span>X</span>
+			</a>
+		</li>
+		<li>
+			<a href={facebookHref} target="_blank" rel="noopener noreferrer" class="share-btn fb" aria-label="Facebookでシェア">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+					<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+				</svg>
+				<span>Facebook</span>
+			</a>
+		</li>
+		<li>
+			<a href={lineHref} target="_blank" rel="noopener noreferrer" class="share-btn line" aria-label="LINEで送る">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+					<path d="M19.365 9.89c.5 0 .905.405.905.906 0 .5-.405.906-.905.906h-2.522v1.617h2.522c.5 0 .906.406.906.907 0 .5-.405.906-.906.906h-3.428c-.5 0-.906-.406-.906-.906V8.277c0-.5.405-.906.906-.906h3.428c.5 0 .906.406.906.907 0 .5-.405.906-.906.906h-2.522V9.89zm-4.334 4.336c0 .39-.25.737-.622.863-.094.032-.192.048-.288.048-.29 0-.56-.14-.729-.378l-3.514-4.782v4.257c0 .5-.404.906-.905.906-.5 0-.906-.406-.906-.906V8.277c0-.39.25-.736.622-.862.094-.033.19-.047.288-.047.288 0 .558.14.727.378L13.22 12.53V8.277c0-.5.405-.906.907-.906.5 0 .905.406.905.906v5.948zm-7.985 0c0 .5-.405.906-.906.906-.5 0-.906-.406-.906-.906V8.277c0-.5.405-.906.906-.906.5 0 .906.406.906.907v5.948zm-2.43 0c0 .5-.406.906-.907.906H.28c-.5 0-.906-.406-.906-.906V8.277c0-.5.405-.906.906-.906.5 0 .906.406.906.907v5.042h2.522c.5 0 .906.407.906.906zM24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.592.12.303.079.778.038 1.086l-.164 1.018c-.045.299-.24 1.186 1.049.645 1.291-.542 6.916-4.104 9.436-7.023C23.176 14.293 24 12.41 24 10.314z" />
+				</svg>
+				<span>LINE</span>
+			</a>
+		</li>
+		<li>
+			<a href={hatebuHref} target="_blank" rel="noopener noreferrer" class="share-btn hatebu" aria-label="はてなブックマークに追加">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+					<path d="M20.47 0H3.53A3.53 3.53 0 000 3.53v16.94A3.53 3.53 0 003.53 24h16.94A3.53 3.53 0 0024 20.47V3.53A3.53 3.53 0 0020.47 0zM12.47 17.34h-1.7v-1.7h1.7zm3.38-5.24c-.46.46-1.09.7-1.89.7h-1.7v2.94h-1.7V6.51h3.4c.8 0 1.43.24 1.89.7.46.46.7 1.09.7 1.89v1.11c0 .8-.24 1.43-.7 1.89zm-1-2.85c0-.46-.23-.69-.69-.69h-1.7v2.45h1.7c.46 0 .69-.23.69-.69v-1.07z" />
+				</svg>
+				<span>はてブ</span>
+			</a>
+		</li>
+	</ul>
+</div>
+
+<style>
+	.share {
+		margin: 40px auto 0;
+		max-width: 760px;
+		padding: 0 24px;
+	}
+	.share-label {
+		font-size: 13px;
+		color: var(--text-sub);
+		margin-bottom: 12px;
+		text-align: center;
+	}
+	.share-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		gap: 10px;
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+	.share-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding: 10px 16px;
+		border-radius: 100px;
+		font-size: 13px;
+		font-weight: 700;
+		color: white;
+		transition: transform 0.2s, box-shadow 0.2s;
+		box-shadow: var(--shadow);
+	}
+	.share-btn:hover {
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-hover);
+		color: white;
+	}
+	.share-btn.x {
+		background: #000;
+	}
+	.share-btn.fb {
+		background: #1877f2;
+	}
+	.share-btn.line {
+		background: #06c755;
+	}
+	.share-btn.hatebu {
+		background: #00a4de;
+	}
+
+	@media (max-width: 600px) {
+		.share-list {
+			gap: 8px;
+		}
+		.share-btn {
+			padding: 8px 14px;
+			font-size: 12px;
+		}
+	}
+</style>

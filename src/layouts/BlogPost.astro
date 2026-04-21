@@ -5,6 +5,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import ShareButtons from '../components/ShareButtons.astro';
 import { CATEGORIES } from '../consts';
 
 type Props = CollectionEntry<'blog'>['data'] & {
@@ -13,6 +14,9 @@ type Props = CollectionEntry<'blog'>['data'] & {
 
 const { title, description, pubDate, updatedDate, heroImage, category, relatedPosts = [] } = Astro.props;
 const cat = CATEGORIES[category] ?? CATEGORIES.life;
+
+// シェアボタン用の絶対URL（Astro.siteが未設定時はfallback）
+const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://koharu-nurse.com').href;
 ---
 
 <!doctype html>
@@ -32,7 +36,7 @@ const cat = CATEGORIES[category] ?? CATEGORIES.life;
 	<body>
 		<Header />
 		<main>
-			<article>
+			<article data-pagefind-body>
 				<div class="hero-image">
 					{heroImage ? (
 						<Image width={1020} height={510} src={heroImage} alt="" />
@@ -64,6 +68,7 @@ const cat = CATEGORIES[category] ?? CATEGORIES.life;
 						<slot />
 					</div>
 				</div>
+				<ShareButtons title={title} url={shareUrl} />
 				{relatedPosts.length > 0 && (
 					<aside class="related container" aria-label="関連記事">
 						<h2 class="related-title">🌷 こちらも読まれています</h2>

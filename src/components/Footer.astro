@@ -1,38 +1,151 @@
 ---
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, SITE_TAGLINE, CATEGORIES } from '../consts';
 const today = new Date();
+
+// カテゴリ一覧はCATEGORIES定数から動的に取得（追加時も自動反映）
+const categoryLinks = Object.entries(CATEGORIES).map(([slug, meta]) => ({
+	slug,
+	label: meta.label,
+	emoji: meta.emoji,
+}));
 ---
 
 <footer class="footer">
-	<div class="footer-links">
-		<a href="/about/">プロフィール</a>
-		<a href="/contact/">お問い合わせ</a>
-		<a href="/privacy/">プライバシーポリシー</a>
+	<div class="footer-container">
+		<div class="footer-grid">
+			<!-- サイト情報 -->
+			<div class="footer-col">
+				<h3 class="footer-heading">🌷 {SITE_TITLE}</h3>
+				<p class="footer-desc">{SITE_TAGLINE}</p>
+				<p class="footer-desc-small">
+					3児のママで現役看護師のこはるが、<br />
+					がんばりすぎない家計管理を発信中。
+				</p>
+			</div>
+
+			<!-- カテゴリ -->
+			<div class="footer-col">
+				<h3 class="footer-heading">カテゴリ</h3>
+				<ul class="footer-list">
+					{categoryLinks.map((c) => (
+						<li>
+							<a href={`/category/${c.slug}/`}>
+								<span class="footer-cat-emoji">{c.emoji}</span>
+								{c.label}
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<!-- 情報 -->
+			<div class="footer-col">
+				<h3 class="footer-heading">このサイトについて</h3>
+				<ul class="footer-list">
+					<li><a href="/about/">プロフィール</a></li>
+					<li><a href="/blog/">記事一覧</a></li>
+					<li><a href="/search/">記事を検索</a></li>
+					<li><a href="/contact/">お問い合わせ</a></li>
+					<li><a href="/privacy/">プライバシーポリシー</a></li>
+					<li><a href="/rss.xml">RSSフィード</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="footer-bottom">
+			<p>© {today.getFullYear()} {SITE_TITLE}</p>
+			<p class="footer-disclaimer">
+				本サイトの情報は執筆時点のものです。投資・税務・保険の最終判断はご自身の責任で行ってください。
+			</p>
+		</div>
 	</div>
-	<p>© {today.getFullYear()} {SITE_TITLE}</p>
 </footer>
 
 <style>
 	.footer {
 		background: var(--bg-accent);
-		text-align: center;
-		padding: 40px 24px;
-		margin-top: 40px;
+		margin-top: 60px;
+		padding: 50px 24px 30px;
 		color: var(--text-sub);
+		font-size: 13px;
+	}
+	.footer-container {
+		max-width: 1020px;
+		margin: 0 auto;
+	}
+	.footer-grid {
+		display: grid;
+		grid-template-columns: 1.4fr 1fr 1fr;
+		gap: 40px;
+		margin-bottom: 32px;
+	}
+	.footer-col {
+		display: flex;
+		flex-direction: column;
+	}
+	.footer-heading {
+		font-size: 15px;
+		font-weight: 700;
+		color: var(--text-main);
+		margin-bottom: 14px;
+		padding-bottom: 8px;
+		border-bottom: 2px solid var(--pink-main);
+	}
+	.footer-desc {
+		font-size: 12px;
+		color: var(--pink-deep);
+		font-weight: 700;
+		margin-bottom: 10px;
+		letter-spacing: 0.05em;
+	}
+	.footer-desc-small {
+		font-size: 12px;
+		line-height: 1.8;
+	}
+	.footer-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.footer-list a {
+		font-size: 13px;
+		color: var(--text-sub);
+		transition: color 0.2s;
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+	}
+	.footer-list a:hover {
+		color: var(--pink-deep);
+	}
+	.footer-cat-emoji {
+		font-size: 14px;
+	}
+	.footer-bottom {
+		padding-top: 24px;
+		border-top: 1px dashed var(--border);
+		text-align: center;
+	}
+	.footer-bottom p {
+		margin: 0 0 6px;
 		font-size: 12px;
 	}
-	.footer-links {
-		display: flex;
-		justify-content: center;
-		gap: 24px;
-		margin-bottom: 16px;
-		flex-wrap: wrap;
+	.footer-disclaimer {
+		font-size: 11px;
+		color: var(--text-sub);
+		opacity: 0.8;
 	}
-	.footer-links a {
-		font-size: 13px;
-		transition: color 0.2s;
-	}
-	.footer-links a:hover {
-		color: var(--pink-deep);
+
+	@media (max-width: 768px) {
+		.footer-grid {
+			grid-template-columns: 1fr;
+			gap: 30px;
+		}
+		.footer {
+			padding: 40px 20px 24px;
+		}
 	}
 </style>

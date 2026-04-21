@@ -146,19 +146,36 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 					<a href="/about/" class="profile-btn">プロフィールを読む</a>
 				</div>
 
-				<!-- 人気記事 -->
+				<!-- 編集部おすすめ記事（イチオシ3本と連動） -->
 				{popularPosts.length > 0 && (
 					<div class="side-section">
-						<h3 class="side-title">よく読まれています</h3>
+						<h3 class="side-title">まずはこの記事から</h3>
 						<ul class="popular-list">
-							{popularPosts.map((post) => (
+							{popularPosts.map((post, i) => (
 								<li>
+									<span class="popular-rank">{i + 1}</span>
 									<a href={`/blog/${post.id}/`}>{post.data.title}</a>
 								</li>
 							))}
 						</ul>
 					</div>
 				)}
+
+				<!-- カテゴリクイックリンク -->
+				<div class="side-section">
+					<h3 class="side-title">カテゴリから探す</h3>
+					<ul class="side-category-list">
+						{categoryStats.filter((c) => c.count > 0).map((c) => (
+							<li>
+								<a href={`/category/${c.slug}/`}>
+									<span>{c.emoji}</span>
+									<span>{c.label}</span>
+									<span class="side-cat-count">{c.count}</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
 			</aside>
 		</div>
 
@@ -536,16 +553,66 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 	.popular-list li:last-child {
 		border-bottom: none;
 	}
-	.popular-list li::before {
-		content: '♡ ';
-		color: var(--pink-main);
+	.popular-list li {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+	}
+	.popular-rank {
+		background: var(--pink-deep);
+		color: white;
+		width: 20px;
+		height: 20px;
+		border-radius: 50%;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 11px;
+		font-weight: 700;
+		flex-shrink: 0;
+		margin-top: 2px;
 	}
 	.popular-list a {
 		color: var(--text-main);
 		transition: color 0.2s;
+		flex: 1;
 	}
 	.popular-list a:hover {
 		color: var(--pink-deep);
+	}
+
+	/* サイドバー：カテゴリリスト */
+	.side-category-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.side-category-list li {
+		border-bottom: 1px dashed var(--border);
+	}
+	.side-category-list li:last-child {
+		border-bottom: none;
+	}
+	.side-category-list a {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 10px 4px;
+		color: var(--text-main);
+		font-size: 13px;
+		transition: color 0.2s;
+	}
+	.side-category-list a:hover {
+		color: var(--pink-deep);
+	}
+	.side-cat-count {
+		margin-left: auto;
+		font-size: 11px;
+		color: var(--pink-deep);
+		background: var(--bg-accent);
+		padding: 2px 8px;
+		border-radius: 100px;
+		font-weight: 700;
 	}
 
 	/* スマホ対応 */
