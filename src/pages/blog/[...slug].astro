@@ -3,7 +3,8 @@ import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
+	// 下書き記事はページを生成しない（sitemap混入も防ぐ）
+	const posts = await getCollection('blog', ({ data }) => !data.draft);
 	return posts.map((post) => ({
 		params: { slug: post.id },
 		props: post,
