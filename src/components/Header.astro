@@ -32,29 +32,48 @@ import { SITE_TITLE_SHORT, SITE_TAGLINE, NAV_ITEMS } from '../consts';
 		align-items: center;
 	}
 	.site-title {
-		font-size: 20px;
+		font-size: 19px;
 		color: var(--pink-deep);
 		font-weight: 700;
 		font-family: var(--font-heading);
+		display: inline-flex;
+		flex-direction: column;
+		line-height: 1.2;
+		gap: 2px;
 	}
 	.site-title span {
-		font-size: 13px;
+		font-size: 12px;
 		color: var(--text-sub);
 		font-weight: 500;
-		margin-left: 6px;
+		margin-left: 0;
 		font-family: var(--font-body);
 	}
 	.nav {
 		display: flex;
-		gap: 24px;
+		gap: 20px;
+		align-items: center;
 	}
 	.nav a {
 		font-size: 14px;
 		color: var(--text-sub);
 		transition: color 0.2s;
+		white-space: nowrap;
 	}
 	.nav a:hover {
 		color: var(--pink-deep);
+	}
+
+	/* 中間サイズ（タブレット〜小型ノートPC）でナビをコンパクトに */
+	@media (max-width: 1050px) {
+		.nav {
+			gap: 14px;
+		}
+		.nav a {
+			font-size: 13px;
+		}
+		.site-title {
+			font-size: 17px;
+		}
 	}
 
 	@media (max-width: 768px) {
