@@ -117,13 +117,14 @@ const shareUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://koharu-nurse
 		height: auto;
 	}
 	.hero-placeholder {
-		aspect-ratio: 2 / 1;
+		/* heroImage未設定時のフォールバック。絵文字のみなので帯状にコンパクト化 */
+		aspect-ratio: 4 / 1;
 		background: linear-gradient(135deg, #f3e5e1, #e8d3cd);
 		border-radius: 16px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 120px;
+		font-size: 72px;
 		box-shadow: var(--shadow);
 	}
 
