@@ -275,7 +275,7 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 		border-radius: 20px;
 		overflow: hidden;
 		box-shadow: var(--shadow);
-		border: 2px solid var(--pink-main);
+		border: 1.5px solid var(--border);
 		transition: transform 0.3s, box-shadow 0.3s;
 		display: block;
 		position: relative;
@@ -289,32 +289,47 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 		position: absolute;
 		top: 12px;
 		left: 12px;
-		background: var(--pink-deep);
-		color: white;
-		font-size: 11px;
+		background: var(--forest-green);
+		color: #fffbf3;
+		font-family: var(--font-display);
+		font-size: 12px;
 		font-weight: 700;
-		padding: 4px 10px;
+		padding: 4px 12px;
 		border-radius: 100px;
 		z-index: 2;
 		letter-spacing: 0.05em;
 	}
 	.featured-thumb {
 		aspect-ratio: 16 / 9;
-		background: linear-gradient(135deg, #f3e5e1, #e8d3cd);
+		/* クラフト紙のような柔らかいセージ×クリームのグラデ */
+		background: linear-gradient(135deg, #eaf0dc, #f7e7ce);
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		position: relative;
+	}
+	/* ドット装飾（kumakoro風のあしらい） */
+	.featured-thumb::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: radial-gradient(circle at 20px 20px, rgba(58, 45, 31, 0.12) 1.5px, transparent 2px);
+		background-size: 22px 22px;
+		opacity: 0.5;
+		pointer-events: none;
 	}
 	.featured-emoji {
 		font-size: 56px;
+		position: relative;
+		z-index: 1;
 	}
 	.featured-body {
 		padding: 18px 20px 22px;
 	}
 	.featured-category {
 		display: inline-block;
-		background: var(--bg-accent);
-		color: var(--pink-deep);
+		background: var(--bg-accent-warm);
+		color: var(--brown-warm);
 		font-size: 11px;
 		padding: 4px 10px;
 		border-radius: 100px;
@@ -423,7 +438,7 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 	}
 	.article-thumb {
 		aspect-ratio: 16 / 10;
-		background: linear-gradient(135deg, #f3e5e1, #e8d3cd);
+		background: linear-gradient(135deg, #eaf0dc, #f7e7ce);
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -487,7 +502,7 @@ const categoryStats = Object.entries(CATEGORIES).map(([slug, meta]) => ({
 		width: 110px;
 		height: 110px;
 		border-radius: 50%;
-		background: linear-gradient(135deg, #f3e5e1, #d4a5a5);
+		background: linear-gradient(135deg, #f7e7ce, #e8a97d);
 		margin: 0 auto 16px;
 		display: flex;
 		align-items: center;
